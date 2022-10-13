@@ -1,0 +1,103 @@
+* {
+    padding: 0%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+}
+
+#book-list {
+    min-width: 90vh;
+    min-height: 90vh;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 5vh;
+    padding: 5vh;
+}
+
+.book {
+    background-color: blueviolet;
+
+    padding: 3vh;
+    border-radius: 3vh;
+    display: flex;
+    gap: 5vh;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    aspect-ratio: 3/4;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.book-isRead {
+
+}
+
+.book-delete {
+
+}
+
+button {
+    background-color: blueviolet;
+    color: white;
+    border: solid 1px;
+    border-radius: 1vh;
+    padding: 1vh;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: blueviolet;
+    color: white;
+    border: solid 2px gray;
+    border-radius: 1vh;
+    padding: calc(1vh - 2px);
+    padding-left: calc(1vh - 1px);
+    padding-right: calc(1vh - 1px);
+    cursor: pointer;
+}
+
+button:active {
+    background-color: darkmagenta;
+    color: white;
+    border: solid 1px;
+    border-radius: 1vh;
+    padding: 1vh;
+    cursor: pointer;
+}
+
+
+.book-info {
+    min-height: 10ch;
+    background-color: rgba(200, 200, 200, 0.6);
+    margin: -3vh;
+    padding: 1vh;
+    border-bottom-left-radius: 3vh;
+    border-bottom-right-radius: 3vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.book-title {
+
+}
+
+.book-description {
+
+}
+
+.book-pageLen {
+    align-self: flex-end;
+}
+
+.book-pageLen::after {
+    content: " pgs";
+}

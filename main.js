@@ -21,11 +21,13 @@ function displayBooks () {
     let html = "";
     for (let i = 0; i < books.length; i++) {
         let book = books[i];
-        let desc = book.description ? `<p class="book-desc">${book.description}</p>` : ""; 
+        let desc = book.description ? `<p class="book-description">${book.description}</p>` : "c"; 
         html += `
-            <div class="book">
-            <button class="book-isRead">${book.isRead ? "already read" : "not read yet"}</button>
-            <button class="book-delete">Del</button>
+            <div class="book" style="background-image: ${book.coverImg}">
+            <div class="buttons">
+                <button class="book-isRead">${book.isRead ? "already read" : "not read yet"}</button>
+                <button class="book-delete">Del</button>
+            </div>
             <div class="book-info">
                 <h3 class="book-title">${book.title} - ${book.author}</h3>
                 ${desc}
