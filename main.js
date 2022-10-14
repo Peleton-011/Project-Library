@@ -59,6 +59,16 @@ function newId() {
     return books[books.length - 1] ? books[books.length - 1].id + 1 : 0;
 }
 
+//Adds all event listeners to the buttons on the book tag
+//You have to pass all the buttons' selectors followed by their function as separate arguments
+
+function addEvents() {
+    for (i = 0; i < (arguments.length / 2) -1; i++) {
+        const button = document.querySelector(arguments[i]);
+        button.addEventListener("click", arguments[i + 1]);
+    }
+}
+
 //Add sample books to library
 
 function sampleBooks(amt) {
