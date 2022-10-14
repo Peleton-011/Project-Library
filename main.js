@@ -1,6 +1,6 @@
 const books = [];
 
-const Book = function (title, author, pageLen, isRead, coverImg, description) {
+const Book = function (title, author, pageLen, isRead, coverImg, description, id) {
     this.title = String(title),
     this.author = String(author),
     this.pageLen = Number(pageLen),
@@ -11,6 +11,7 @@ const Book = function (title, author, pageLen, isRead, coverImg, description) {
     }
     this.coverImg = String(coverImg) || null;
     this.description = String(description) || null;
+    this.id = id || newId();
 }
 
 function addBookToLibrary (title, author, pageLen, isRead, coverImg) {
@@ -23,7 +24,7 @@ function displayBooks () {
         let book = books[i];
         let desc = book.description ? `<p class="book-description">${book.description}</p>` : "c"; 
         html += `
-            <div class="book" style="background-image: ${book.coverImg}">
+            <div class="book" id="${book.id}" style="background-image: ${book.coverImg}">
             <div class="buttons">
                 <button class="book-isRead">${book.isRead ? "already read" : "not read yet"}</button>
                 <button class="book-delete">Del</button>
@@ -38,6 +39,7 @@ function displayBooks () {
     }
     //Add to dom
     document.getElementById("book-list").innerHTML = html;
+
 }
 
 //Add sample books to library
@@ -52,6 +54,10 @@ function sampleBooks(amt) {
             "https://picsum.photos/id/" + i
         );
     }
+}
+
+function newId () {
+    return books[books.length - 1] ? books[books.length - 1].id + 1 : 0; 
 }
 
 
