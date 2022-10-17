@@ -53,18 +53,31 @@ function displayBooks() {
         //Add to dom
         document.getElementById("book-list").innerHTML = html;
     }
+    //Add event listeners
+    addEvents();
 }
 
 //Add event listeners
 
 function addEvents () {
+    // Delete book button
+    const delBtns = document.querySelectorAll(".book-delete");
+    for (let i = 0; i < delBtns.length; i++) {
+        const btn = delBtns[i]
+        btn.addEventListener("click", () => {
+            const id = Number((btn.closest(".book").id).replace(/[^0-9]/g, ''));
+            books.splice(getIndexById(id), 1);
+            displayBooks();
+        });
+    }
 
+    // Read/Not-Read toggle button
     const readBtns = document.querySelectorAll(".book-isRead");
     for (let i = 0; i < readBtns.length; i++) {
         const btn = readBtns[i]
         btn.addEventListener("click", () => {
             const id = Number((btn.closest(".book").id).replace(/[^0-9]/g, ''));
-            const book = books[id];
+            const book = getBookById(id);
             book.isRead =!book.isRead;
             btn.classList.toggle("isRead");
         });
@@ -76,6 +89,27 @@ function newId() {
     id++;
     return id;
     //`id${books[books.length - 1] ? parseInt(books[books.length - 1].id) + 1 : 0}`;
+}
+
+// Get the book by id
+
+function getBookById(id) {
+    const index = books.findIndex(book => book.id == id )
+    return books[index];
+}
+
+// Get the index by id 
+
+function getIndexById(id) {
+    const index = books.findIndex(book => book.id == id )
+    return index;
+}
+
+// Get the book by title
+
+function getBookByTitle(title) {
+    const index = books.findIndex(book => book.title == title )
+    return books[index];
 }
 
 //Add sample books to library
@@ -95,4 +129,3 @@ function sampleBooks(amt) {
 //Add sample books to library
 sampleBooks(10);
 displayBooks();
-addEvents();
