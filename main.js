@@ -11,10 +11,10 @@ const Book = function (
     description,
     id
 ) {
-    (this.title = String(title)),
-        (this.author = String(author)),
+    (this.title = String(title) || "Untitled"),
+        (this.author = String(author) || "Anonymous"),
         (this.pageLen = Number(pageLen)),
-        (this.isRead = Boolean(isRead)),
+        (this.isRead = Boolean(isRead) || false),
         (this.info = () => {
             let readStatus = this.isRead ? "already read" : "not read yet";
             return `${this.title} by ${this.author}, ${this.pageLen} pages, ${readStatus}`;
@@ -30,6 +30,7 @@ function addBookToLibrary(title, author, pageLen, isRead, coverImg) {
 
 function displayBooks() {
     let html = "";
+    const newBookBtn = `<button class="book book-add">+</div>`
     for (let i = 0; i < books.length; i++) {
         let book = books[i];
         let desc = book.description
@@ -46,12 +47,12 @@ function displayBooks() {
             <div class="book-info">
                 <h3 class="book-title">${book.title} - ${book.author}</h3>
                 ${desc}
-                <p class="book-pageLen">${book.pageLen}</p>
+                <p class="book-pageLen">${book.pageLen ? book.pageLen + " pgs" : ""}</p>
             </div>
             </div>
         `;
         //Add to dom
-        document.getElementById("book-list").innerHTML = html;
+        document.getElementById("book-list").innerHTML = html + newBookBtn;
     }
     //Add event listeners
     addEvents();
@@ -82,6 +83,11 @@ function addEvents () {
             btn.classList.toggle("isRead");
         });
     }
+
+    // New-book button
+    const newBookBtn = document.querySelector(".book-add")
+    newBookBtn.addEventListener("click", () => {
+    });
 }
 
 function newId() {
@@ -110,6 +116,83 @@ function getIndexById(id) {
 function getBookByTitle(title) {
     const index = books.findIndex(book => book.title == title )
     return books[index];
+}
+
+// Display the new book form
+
+function displayNewBookForm() {
+    const newBookForm = document.getElementById("new-book-form");
+    newBookForm.innerHTML = `
+    <form id="signup">
+        <legend id="signup-legend">Let's do this!</legend>
+        <div id="form-main">
+            <div class="input-group">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" required maxlength=40"
+                placeholder="The Banquet" />
+                <p>
+                    Title must not contain special characters and be shorter than 40
+                </p>
+            </div>
+
+            <div class="input-group">
+                <label for="author">Author:</label>
+                <input
+                    type="text"
+                    name="author"
+                    id="author"
+                    maxlength="20"
+                    placeholder="Plato"
+                />
+                <p>
+                    Author must not contain special characters and be shorter than
+                    40
+                </p>
+            </div>
+
+            <div class="input-group">
+                <label for="desc">Description:</label>
+                <br />
+                <textarea
+                    name="desc"
+                    id="desc"
+                    rows="6"
+                    maxlength="100"
+                    placeholder="Add a short description in 100 characters o less"
+                ></textarea>
+            </div>
+
+            <div class="input-group">
+                <label for="page-len">Length in pages:</label>
+                <input
+                    type="number"
+                    name="pageLen"
+                    id="page-len"
+                    placeholder="296"
+                />
+                <p>Length in pages must only contain numbers</p>
+            </div>
+
+            <div class="input-group">
+                <label for="is-read">Have you read it?</label>
+                <input type="checkbox" name="isRead" id="is-read" />
+            </div>
+
+            <div class="input-group">
+                <label for="img-url">Cover image URL:</label>
+                <input
+                    type="text"
+                    name="imgUrl"
+                    id="img-url"
+                    placeholder="www.images.net/myImages/02"
+                />
+            </div>
+            <div class="container">
+                <button type="submit"><span>Join Us</span></button>
+            </div>
+        </div>
+    </form>
+    `;
 }
 
 //Add sample books to library

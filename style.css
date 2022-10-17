@@ -112,7 +112,3 @@ button:active {
 .book-pageLen {
     align-self: flex-end;
 }
-
-.book-pageLen::after {
-    content: " pgs";
-}
