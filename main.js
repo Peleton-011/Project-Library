@@ -1,3 +1,5 @@
+let id = 0;
+
 const books = [];
 
 const Book = function (
@@ -34,13 +36,11 @@ function displayBooks() {
             ? `<p class="book-description">${book.description}</p>`
             : "c";
         html += `
-            <div class="book" id="${book.id}" style="background-image: ${
+            <div class="book" id="id${book.id}" style="background-image: ${
             book.coverImg
         }">
             <div class="buttons">
-                <button class="book-isRead">${
-                    book.isRead ? "already read" : "not read yet"
-                }</button>
+                <button class="book-isRead ${book.isRead ? "isRead" : ""}"></button>
                 <button class="book-delete">Del</button>
             </div>
             <div class="book-info">
@@ -50,23 +50,32 @@ function displayBooks() {
             </div>
             </div>
         `;
+        //Add to dom
+        document.getElementById("book-list").innerHTML = html;
     }
-    //Add to dom
-    document.getElementById("book-list").innerHTML = html;
+}
+
+//Add event listeners
+
+function addEvents () {
+
+    const readBtns = document.querySelectorAll(".book-isRead");
+    for (let i = 0; i < readBtns.length; i++) {
+        const btn = readBtns[i]
+        btn.addEventListener("click", () => {
+            const id = Number((btn.closest(".book").id).replace(/[^0-9]/g, ''));
+            const book = books[id];
+            book.isRead =!book.isRead;
+            btn.classList.toggle("isRead");
+        });
+    }
 }
 
 function newId() {
-    return books[books.length - 1] ? books[books.length - 1].id + 1 : 0;
-}
-
-//Adds all event listeners to the buttons on the book tag
-//You have to pass all the buttons' selectors followed by their function as separate arguments
-
-function addEvents() {
-    for (i = 0; i < (arguments.length / 2) -1; i++) {
-        const button = document.querySelector(arguments[i]);
-        button.addEventListener("click", arguments[i + 1]);
-    }
+//    console.log(`${books[books.length - 1].id} => ${parseInt(books[books.length - 1].id)}`);
+    id++;
+    return id;
+    //`id${books[books.length - 1] ? parseInt(books[books.length - 1].id) + 1 : 0}`;
 }
 
 //Add sample books to library
@@ -86,3 +95,4 @@ function sampleBooks(amt) {
 //Add sample books to library
 sampleBooks(10);
 displayBooks();
+addEvents();

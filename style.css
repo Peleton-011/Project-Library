@@ -36,7 +36,23 @@ body {
 }
 
 .book-isRead {
-    
+
+}
+
+.book-isRead.isRead {
+    background-color: green;
+}
+
+.book-isRead.isRead::after {
+    content: "Already Read";
+}
+
+.book-isRead:not(.isRead) {
+    background-color: yellow;
+}
+
+.book-isRead:not(.isRead)::after {
+    content: "Not Read Yet!";
 }
 
 .book-delete {
