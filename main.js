@@ -122,7 +122,15 @@ function getBookByTitle(title) {
 // Display the new book form
 
 function displayNewBookForm() {
+    const form = document.getElementById("form-popup");
+    form.style.display = "block";
+}
 
+// Hide the new book form
+
+function hideNewBookForm() {
+    const form = document.getElementById("form-popup");
+    form.style.display = "none";
 }
 
 //Add sample books to library
