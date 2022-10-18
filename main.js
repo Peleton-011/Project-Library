@@ -20,34 +20,76 @@ const Book = function (
             return `${this.title} by ${this.author}, ${this.pageLen} pages, ${readStatus}`;
         });
     this.coverImg = String(coverImg) || null;
-    this.description = String(description) || null;
+    this.description =
+        description === undefined
+            ? "Lorem ipsum dolor sit amet watever watever watever and this should almost certainly not be visible to anyone"
+            : String(description);
     this.id = id || newId();
 };
 
-function addBookToLibrary(title, author, pageLen, isRead, coverImg) {
-    books.push(new Book(title, author, pageLen, isRead, coverImg));
+function setup() {
+    // Close form button
+    const closeBtn = document.querySelector("#form-top > #close");
+    closeBtn.addEventListener("click", () => {
+        hideNewBookForm();
+    });
+
+    // Submit button
+    const submitBtn = document.querySelector("#submit");
+    submitBtn.addEventListener("click", () => {
+        const form = document.getElementById("new-book");
+        const formData = new FormData(form);
+
+        addBookToLibrary(
+            formData.get("title"),
+            formData.get("author"),
+            formData.get("pageLen"),
+            formData.get("isRead"),
+            formData.get("imgUrl"),
+            formData.get("desc")
+        );
+        hideNewBookForm();
+    });
+
+    //Add sample books to library
+    sampleBooks(10);
+    displayBooks();
+}
+
+function addBookToLibrary(
+    title,
+    author,
+    pageLen,
+    isRead,
+    coverImg,
+    description
+) {
+    books.push(new Book(title, author, pageLen, isRead, coverImg, description));
+    displayBooks();
 }
 
 function displayBooks() {
     let html = "";
-    const newBookBtn = `<button class="book book-add">+</div>`
+    const newBookBtn = `<button class="book book-add">+</div>`;
     for (let i = 0; i < books.length; i++) {
         let book = books[i];
-        let desc = book.description
-            ? `<p class="book-description">${book.description}</p>`
-            : "c";
+        let desc = book.description ? book.description : "...";
         html += `
-            <div class="book" id="id${book.id}" style="background-image: ${
+            <div class="book" id="id${book.id}" style="background-image: url(${
             book.coverImg
-        }">
-            <div class="buttons">
-                <button class="book-isRead ${book.isRead ? "isRead" : ""}"></button>
+        })">
+            <div class="book-nav">
+                <button class="book-isRead ${
+                    book.isRead ? "isRead" : ""
+                }"></button>
                 <button class="book-delete">Del</button>
             </div>
             <div class="book-info">
                 <h3 class="book-title">${book.title} - ${book.author}</h3>
-                ${desc}
-                <p class="book-pageLen">${book.pageLen ? book.pageLen + " pgs" : ""}</p>
+                <p class="book-description truncate-overflow fade">${desc}</p>
+                <p class="book-pageLen">${
+                    book.pageLen ? book.pageLen + " pgs" : "length unknown"
+                }</p>
             </div>
             </div>
         `;
@@ -58,15 +100,15 @@ function displayBooks() {
     addEvents();
 }
 
-//Add event listeners
+//Add book event listeners
 
-function addEvents () {
+function addEvents() {
     // Delete book button
     const delBtns = document.querySelectorAll(".book-delete");
     for (let i = 0; i < delBtns.length; i++) {
-        const btn = delBtns[i]
+        const btn = delBtns[i];
         btn.addEventListener("click", () => {
-            const id = Number((btn.closest(".book").id).replace(/[^0-9]/g, ''));
+            const id = Number(btn.closest(".book").id.replace(/[^0-9]/g, ""));
             books.splice(getIndexById(id), 1);
             displayBooks();
         });
@@ -75,47 +117,46 @@ function addEvents () {
     // Read/Not-Read toggle button
     const readBtns = document.querySelectorAll(".book-isRead");
     for (let i = 0; i < readBtns.length; i++) {
-        const btn = readBtns[i]
+        const btn = readBtns[i];
         btn.addEventListener("click", () => {
-            const id = Number((btn.closest(".book").id).replace(/[^0-9]/g, ''));
+            const id = Number(btn.closest(".book").id.replace(/[^0-9]/g, ""));
             const book = getBookById(id);
-            book.isRead =!book.isRead;
+            book.isRead = !book.isRead;
             btn.classList.toggle("isRead");
         });
     }
 
     // New-book button
-    const newBookBtn = document.querySelector(".book-add")
+    const newBookBtn = document.querySelector(".book-add");
     newBookBtn.addEventListener("click", () => {
         displayNewBookForm();
     });
 }
 
 function newId() {
-//    console.log(`${books[books.length - 1].id} => ${parseInt(books[books.length - 1].id)}`);
-    id++;
-    return id;
+    //    console.log(`${books[books.length - 1].id} => ${parseInt(books[books.length - 1].id)}`);
+    return id++;
     //`id${books[books.length - 1] ? parseInt(books[books.length - 1].id) + 1 : 0}`;
 }
 
 // Get the book by id
 
 function getBookById(id) {
-    const index = books.findIndex(book => book.id == id )
+    const index = books.findIndex((book) => book.id == id);
     return books[index];
 }
 
-// Get the index by id 
+// Get the index by id
 
 function getIndexById(id) {
-    const index = books.findIndex(book => book.id == id )
+    const index = books.findIndex((book) => book.id == id);
     return index;
 }
 
 // Get the book by title
 
 function getBookByTitle(title) {
-    const index = books.findIndex(book => book.title == title )
+    const index = books.findIndex((book) => book.title == title);
     return books[index];
 }
 
@@ -147,6 +188,4 @@ function sampleBooks(amt) {
     }
 }
 
-//Add sample books to library
-sampleBooks(10);
-displayBooks();
+setup();

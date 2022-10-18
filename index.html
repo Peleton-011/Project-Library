@@ -11,20 +11,27 @@
     </head>
     <body>
         <div id="book-list"></div>
+
         <!-- New Book Form -->
         <div id="form-popup">
             <form id="new-book">
-                <legend id="new-book-legend">Add Book</legend>
-            
+                <div id="form-top">
+                    <legend id="new-book-legend">Add Book</legend>
+                    <button id="close">
+                        <img id="close-img" src="./icons/close.svg" alt="Close" />
+                    </button>                    
+                </div>
+
                 <div class="input-group">
                     <label for="title">Title:</label>
-                    <input type="text" name="title" id="title" required maxlength=40"
-                    placeholder="The Banquet" />
+                    <input type="text" name="title" id="title" required
+                    maxlength=40" placeholder="The Banquet" />
                     <p>
-                        Title must not contain special characters and be shorter than 40
+                        Title must not contain special characters and be shorter
+                        than 40
                     </p>
                 </div>
-    
+
                 <div class="input-group">
                     <label for="author">Author:</label>
                     <input
@@ -35,11 +42,11 @@
                         placeholder="Plato"
                     />
                     <p>
-                        Author must not contain special characters and be shorter than
-                        40
+                        Author must not contain special characters and be
+                        shorter than 40
                     </p>
                 </div>
-    
+
                 <div class="input-group">
                     <label for="desc">Description:</label>
                     <br />
@@ -51,7 +58,7 @@
                         placeholder="Add a short description in 100 characters o less"
                     ></textarea>
                 </div>
-    
+
                 <div class="input-group">
                     <label for="page-len">Length in pages:</label>
                     <input
@@ -62,12 +69,12 @@
                     />
                     <p>Length in pages must only contain numbers</p>
                 </div>
-    
+
                 <div class="input-group checkbox">
                     <label for="is-read">Have you read it?</label>
                     <input type="checkbox" name="isRead" id="is-read" />
                 </div>
-    
+
                 <div class="input-group">
                     <label for="img-url">Cover image URL:</label>
                     <input
@@ -77,8 +84,8 @@
                         placeholder="www.images.net/myImages/02"
                     />
                 </div>
-                <button type="submit">Add Book</button>
             </form>
+            <button id="submit">Add Book</button>
         </div>
     </body>
 </html>

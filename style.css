@@ -1,100 +1,102 @@
+:root {
+    --base-hue: 140;
+    --saturation: 95%;
+    --lightness: 50%;
+    --rotation: 60;
+    color: #222;
+    --main-color: hsl(var(--base-hue), var(--saturation), var(--lightness));
+    --sec-color: hsl(
+        calc(var(--base-hue) + var(--rotation)),
+        var(--saturation),
+        var(--lightness)
+    );
+    --ter-color: hsl(
+        calc(var(--base-hue) + var(--rotation) * 2),
+        var(--saturation),
+        var(--lightness)
+    );
+
+    --book-width: 200px;
+}
+
 * {
-    padding: 0%;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
     box-sizing: border-box;
+}
+
+html {
+    --lh: 1.4rem;
+    line-height: var(--lh);
 }
 
 body {
     min-height: 100vh;
 }
 
+.neumorph, 
+input {
+    background: rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(120, 0, 0, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
 #book-list {
-    min-width: 90vh;
-    min-height: 90vh;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 5vh;
-    padding: 5vh;
+    grid-template-columns: repeat(auto-fill, minmax(var(--book-width), 1fr));
+    gap: 3rem;
+    padding: 3rem;
 }
 
 .book {
     background-color: blueviolet;
-
-    padding: 3vh;
-    border-radius: 3vh;
+    padding: 1rem;
     display: flex;
-    gap: 5vh;
+    gap: 3rem;
     flex-direction: column;
     justify-content: space-between;
-    align-items: stretch;
     aspect-ratio: 3/4;
 }
 
-.buttons {
+.book-nav {
     display: flex;
     justify-content: space-between;
+    gap: 3rem;
 }
 
-.book-isRead {
+/* Revisar vv */
 
-}
-
-.book-isRead.isRead {
-    background-color: green;
-}
-
-.book-isRead.isRead::after {
-    content: "Already Read";
-}
-
-.book-isRead:not(.isRead) {
-    background-color: yellow;
-}
-
-.book-isRead:not(.isRead)::after {
-    content: "Not Read Yet!";
-}
-
-.book-delete {
-
-}
-
-button {
+.book-nav > button {
     background-color: blueviolet;
     color: white;
-    border: solid 1px;
-    border-radius: 1vh;
     padding: 1vh;
-    cursor: pointer;
 }
 
-button:hover {
+.book-nav > button:hover {
     background-color: blueviolet;
     color: white;
     border: solid 2px gray;
-    border-radius: 1vh;
     padding: calc(1vh - 2px);
     padding-left: calc(1vh - 1px);
     padding-right: calc(1vh - 1px);
-    cursor: pointer;
 }
 
-button:active {
+.book-nav > button:active {
     background-color: darkmagenta;
     color: white;
     border: solid 1px;
-    border-radius: 1vh;
     padding: 1vh;
-    cursor: pointer;
 }
+
+/* Revisar ^^ */
 
 .book-info {
     min-height: 10ch;
     background-color: rgba(200, 200, 200, 0.6);
-    margin: -3vh;
-    padding: 1vh;
-    border-bottom-left-radius: 3vh;
-    border-bottom-right-radius: 3vh;
+    margin: -1rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -102,11 +104,57 @@ button:active {
 }
 
 .book-title {
-
+    font-size: 1rem;
+    font-weight: bold;
 }
 
-.book-description {
+/* Dealing with description overflow */
+.truncate-overflow {
+    --max-lines: 2;
+    position: relative;
+    max-height: calc(var(--lh) * var(--max-lines));
+    overflow: hidden;
+    padding-right: 1rem; /* space for ellipsis */
+}
+.truncate-overflow::before {
+    position: absolute;
+    content: "...";
+    inset-block-end: 0; /* "bottom" */
+    inset-inline-end: 0; /* "right" */
+}
+.truncate-overflow::after {
+    content: "";
+    position: absolute;
+    inset-inline-end: 0; /* "right" */
+    width: 1rem;
+    height: 1rem;
+    background: white;
+}
 
+.fade {
+    cursor: pointer;
+    position: relative;
+    height: 3.6em; /* exactly three lines */
+}
+.fade::after {
+    content: "";
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40%;
+    height: 1.2em;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0),
+        rgba(
+                calc(138 * 0.4 + 200 * 0.6),
+                calc(43 * 0.4 + 200 * 0.6),
+                calc(226 * 0.4 + 200 * 0.6),
+                1
+            )
+            50%
+    );
 }
 
 .book-pageLen {
@@ -117,39 +165,37 @@ button:active {
 
 #form-popup {
     display: none;
-}
-
-#new-book {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    column-gap: 1rem;
-    justify-content: end;
-
-    background: rgba(0, 0, 0, 0.25);
-    box-shadow: 0 8px 32px 0 rgba(120, 0, 0, 0.37);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    padding: 1rem;
-
     position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
 }
 
-#new-book > button {
-    position: relative;
-    cursor: pointer;
+#form-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    margin-top: 1rem;
-    color: var(--black);
-    background-color: var(--main-color);
-    border: none;
-    box-shadow: 0 8px 32px 0 rgba(120, 0, 0, 0.37);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+#form-top > #close {
+    width: 2rem;
     height: 2rem;
-    grid-column: 0 / span 1;
+}
+
+#form-top > #close:hover {
+    cursor: pointer;
+}
+
+#new-book {
+    display: flex;
+    flex-direction: column;
+    column-gap: 1rem;
+    justify-content: end;
+}
+
+/* Revisar vv */
+#new-book > button {
+    height: 2rem;
 
     transition: all 0.2s linear;
 }
@@ -157,15 +203,6 @@ button:active {
 input {
     width: 100%;
     margin: 0px auto;
-
-    color: var(--white);
-    background-color: var(--black);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-style: none;
-    /* border-left: #e31e24 2px solid; */
-    border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 label[for="is-read"] {
@@ -175,29 +212,17 @@ label[for="is-read"] {
 .input-group.checkbox {
     flex-direction: row;
     justify-content: flex-start;
+    align-items: center;
 }
 
 #is-read {
-    background: none;
-    border: none;
-    box-shadow: none;
-    background-color: rgba(0, 0, 0, 0);
-    backdrop-filter: blur(0px);
+    outline-style: none;
     width: 1rem;
     margin: 0%;
+    accent-color: var(--main-color);
 }
 
-#is-read:focus {
-    border-style: none;
-    outline-style: none;
-}
-
-input:focus {
-    outline-color: var(--main-color);
-    background-color: var(--black);
-    outline-style: ridge;
-    outline-width: 2px;
-}
+/* Revisar vv */
 
 input.valid {
     color: var(--white);
