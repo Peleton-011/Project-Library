@@ -22,7 +22,7 @@ const Book = function (
     this.coverImg = String(coverImg) || null;
     this.description =
         description === undefined
-            ? "Lorem ipsum dolor sit amet watever watever watever and this should almost certainly not be visible to anyone"
+            ? "Read to find out more!"
             : String(description);
     this.id = id || newId();
 };
@@ -69,8 +69,25 @@ function addBookToLibrary(
 }
 
 function displayBooks() {
+    const bookList = document.getElementById("book-list");
+    //Remove add book button
+    const newBookBtn = document.querySelector(".book.book-add");
+    newBookBtn && popOut(newBookBtn);
+    //Find displayed books
+    const displayedBooks = [];
+    for (let i = 0; i < bookList.children.length; i++) {
+        displayedBooks.push(Number(bookList.children[i].id.replace(/[^0-9]/g, "")));
+    }
+    for (let i = 0; i < displayedBooks.length; i++) {
+        for (let j = 0; j < books.length; j++) {
+            if (displa)
+        }
+        
+    }
+    console.log(displayedBooks);
+
     let html = "";
-    const newBookBtn = `<button class="book book-add">+</div>`;
+    const newBookBtno = `<button class="book book-add">+</div>`;
     const newBooksById = [];
     for (let i = 0; i < books.length; i++) {
         let book = books[i];
@@ -99,7 +116,7 @@ function displayBooks() {
         `;
     }
     //Add to dom
-    document.getElementById("book-list").innerHTML = html + newBookBtn;
+    bookList.innerHTML = html + newBookBtno;
     //Pop-in effect
     for (let i = 0; i < newBooksById.length; i++ ) {
         popIn(`#id${newBooksById[i]}`);
