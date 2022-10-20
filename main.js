@@ -31,7 +31,7 @@ function setup() {
     // Close form button
     const closeBtn = document.querySelector("#form-top > #close");
     closeBtn.addEventListener("click", () => {
-        hideNewBookForm();
+        popOut("#form-popup");
     });
 
     // Submit button
@@ -48,7 +48,7 @@ function setup() {
             formData.get("imgUrl"),
             formData.get("desc")
         );
-        hideNewBookForm();
+        popOut("#form-popup");
     });
 
     //Add sample books to library
@@ -71,30 +71,43 @@ function addBookToLibrary(
 function displayBooks() {
     let html = "";
     const newBookBtn = `<button class="book book-add">+</div>`;
+    const newBooksById = [];
     for (let i = 0; i < books.length; i++) {
         let book = books[i];
+        if (document.querySelector(`#id${book.id}`)) {
+            continue;
+        }
+        newBooksById.push(book.id);
         let desc = book.description ? book.description : "...";
         html += `
             <div class="book" id="id${book.id}" style="background-image: url(${
             book.coverImg
         })">
             <div class="book-nav">
-                <button class="book-isRead ${
-                    book.isRead ? "isRead" : ""
-                }"></button>
-                <button class="book-delete">Del</button>
+                <button class="book-isRead ${book.isRead ? "isRead" : ""}">
+                </button>
+                <button class="book-delete"></button>
             </div>
             <div class="book-info">
                 <h3 class="book-title">${book.title} - ${book.author}</h3>
-                <p class="book-description truncate-overflow fade">${desc}</p>
+                <p class="book-description">${desc}</p>
                 <p class="book-pageLen">${
                     book.pageLen ? book.pageLen + " pgs" : "length unknown"
                 }</p>
             </div>
             </div>
         `;
-        //Add to dom
-        document.getElementById("book-list").innerHTML = html + newBookBtn;
+    }
+    //Add to dom
+    document.getElementById("book-list").innerHTML = html + newBookBtn;
+    //Pop-in effect
+    for (let i = 0; i < newBooksById.length; i++ ) {
+        popIn(`#id${newBooksById[i]}`);
+    }
+        //Add line clamping to book descriptions
+    const descriptions = document.querySelectorAll("p.book-description");
+    for (let i = 0; i < descriptions.length; i++) {
+        $clamp(descriptions[i], { clamp: 2 });
     }
     //Add event listeners
     addEvents();
@@ -107,10 +120,11 @@ function addEvents() {
     const delBtns = document.querySelectorAll(".book-delete");
     for (let i = 0; i < delBtns.length; i++) {
         const btn = delBtns[i];
-        btn.addEventListener("click", () => {
-            const id = Number(btn.closest(".book").id.replace(/[^0-9]/g, ""));
+        btn.addEventListener("mousedown", async () => {
+            const thisBook = btn.closest(".book");
+            const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
             books.splice(getIndexById(id), 1);
-            displayBooks();
+            popOut(thisBook)
         });
     }
 
@@ -118,10 +132,11 @@ function addEvents() {
     const readBtns = document.querySelectorAll(".book-isRead");
     for (let i = 0; i < readBtns.length; i++) {
         const btn = readBtns[i];
-        btn.addEventListener("click", () => {
+        btn.addEventListener("mousedown", async () => {
             const id = Number(btn.closest(".book").id.replace(/[^0-9]/g, ""));
             const book = getBookById(id);
             book.isRead = !book.isRead;
+            await delay(250);
             btn.classList.toggle("isRead");
         });
     }
@@ -129,7 +144,7 @@ function addEvents() {
     // New-book button
     const newBookBtn = document.querySelector(".book-add");
     newBookBtn.addEventListener("click", () => {
-        displayNewBookForm();
+        popIn("#form-popup");
     });
 }
 
@@ -160,20 +175,6 @@ function getBookByTitle(title) {
     return books[index];
 }
 
-// Display the new book form
-
-function displayNewBookForm() {
-    const form = document.getElementById("form-popup");
-    form.style.display = "block";
-}
-
-// Hide the new book form
-
-function hideNewBookForm() {
-    const form = document.getElementById("form-popup");
-    form.style.display = "none";
-}
-
 //Add sample books to library
 
 function sampleBooks(amt) {
@@ -182,10 +183,48 @@ function sampleBooks(amt) {
             "Book " + i,
             "Author " + i,
             i,
-            i % 2 == 0,
-            "https://picsum.photos/id/" + i
+            i % 2 == 0
         );
     }
 }
+
+//Delay function
+
+function delay(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+//Appear using the pop animation
+
+async function popIn(selector) {
+    console.log(selector)
+    const elements = selector === String(selector) ? document.querySelectorAll(selector) : [selector];
+    console.log(elements)
+    for (let i = 0; i < elements.length; i++) {
+        console.log(i);
+        console.log(elements[i])
+        elements[i].style.display = "flex";
+        elements[i].classList.add("popIn");
+    }
+    await delay(500);
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].classList.remove("popIn");
+    }
+}
+
+//Disappar using the pop animation
+
+async function popOut(selector) {
+    const elements = selector === String(selector) ? document.querySelectorAll(selector) : [selector];
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].classList.add("popOut");
+    }
+    await delay(500);
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].classList.remove("popOut");
+        elements[i].style.display = "none";
+    }
+}
+
 
 setup();

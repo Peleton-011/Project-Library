@@ -1,0 +1,30 @@
+@font-face {
+    font-family: "GeneralSans";
+    src: url(./fonts/general-sans/GeneralSans-Regular.woff) format("woff");
+    font-style: normal;
+    font-weight: 400;
+}
+@font-face {
+    font-family: "GeneralSans";
+    src: url(./fonts/general-sans/GeneralSans-SemiBold.woff) format("woff");
+    font-style: normal;
+    font-weight: 600;
+}
+@font-face {
+    font-family: "GeneralSans";
+    src: url(./fonts/general-sans/GeneralSans-Italic.woff) format("woff");
+    font-style: italic;
+    font-weight: 400;
+}
+@font-face {
+    font-family: "GeneralSans";
+    src: url(./fonts/general-sans/GeneralSans-Bold.woff) format("woff");
+    font-style: normal;
+    font-weight: 700;
+}
+@font-face {
+    font-family: "GeneralSans";
+    src: url(./fonts/general-sans/GeneralSans-BoldItalic.woff) format("woff");
+    font-style: italic;
+    font-weight: 700;
+}
