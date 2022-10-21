@@ -74,32 +74,64 @@ function displayBooks() {
     const newBookBtn = document.querySelector(".book.book-add");
     newBookBtn && popOut(newBookBtn);
     //Find displayed books
-    const displayedBooks = [];
+    const displayedBooksId = [];
+    const correctlyDisplayed = [];
+    const toDelete = [];
+    const toAdd = [];
     for (let i = 0; i < bookList.children.length; i++) {
-        displayedBooks.push(Number(bookList.children[i].id.replace(/[^0-9]/g, "")));
+        displayedBooksId.push(
+            Number(bookList.children[i].id.replace(/[^0-9]/g, ""))
+        );
     }
-    for (let i = 0; i < displayedBooks.length; i++) {
+    for (let i = 0; i < displayedBooksId.length; i++) {
         for (let j = 0; j < books.length; j++) {
-            if (displa)
+            if (displayedBooksId[i] == books[j].id) {
+                correctlyDisplayed.push(displayedBooksId[i]);
+                continue;
+            }
         }
-        
+        //Delete books which are being displayed but are not inside the books[] array
+        toDelete.push(displayedBooksId[i]);
     }
-    console.log(displayedBooks);
-
-    let html = "";
-    const newBookBtno = `<button class="book book-add">+</div>`;
-    const newBooksById = [];
     for (let i = 0; i < books.length; i++) {
-        let book = books[i];
-        if (document.querySelector(`#id${book.id}`)) {
-            continue;
+        for (let j = 0; j < correctlyDisplayed.length; j++) {
+            if (books[i].id == correctlyDisplayed[j]) {
+                continue;
+            }
         }
-        newBooksById.push(book.id);
-        let desc = book.description ? book.description : "...";
-        html += `
+        //Add books which are inside the books[] array but not being displayed
+        toAdd.push(books[i].id);
+    }
+
+    //Actually add and delete books
+    removeBooks(toDelete);
+    addBooks(toAdd);
+
+    function removeBooks(ids) {
+        for (let i = 0; i < ids.length; i++) {
+            const target = `#id${ids[i]}`;
+            popOut(target);
+            const targets = selectorOrElemToArr(target);
+            for (let j = 0; j < targets.length; j++) {
+                bookList.removeChild(targets[j]);
+            }
+        }
+    }
+
+    function addBooks(ids) {
+        //Remove newbook button
+        const newBookBtn = document.querySelector(".book.book-add");
+        newBookBtn && popOut(newBookBtn) && bookList.removeChild(newBookBtn);
+
+        //Make new books html
+        let newBooksHTML = "";
+        for (let i = 0; i < ids.length; i++) {
+            const book = getBookById(ids[i]);
+            const desc = book.description ? book.description : "...";
+            newBooksHTML += `
             <div class="book" id="id${book.id}" style="background-image: url(${
-            book.coverImg
-        })">
+                book.coverImg
+            })">
             <div class="book-nav">
                 <button class="book-isRead ${book.isRead ? "isRead" : ""}">
                 </button>
@@ -113,26 +145,30 @@ function displayBooks() {
                 }</p>
             </div>
             </div>
-        `;
-    }
-    //Add to dom
-    bookList.innerHTML = html + newBookBtno;
-    //Pop-in effect
-    for (let i = 0; i < newBooksById.length; i++ ) {
-        popIn(`#id${newBooksById[i]}`);
-    }
+            `;
+        }
+
+        //Add to dom
+        bookList.innerHTML += `${newBooksHTML} <button class="book book-add">+</div>`;
+        for (let i = 0; i < ids.length; i++) {
+            popIn(getBookById(ids[i]));
+        }
+        popIn(".book.book-add");
         //Add line clamping to book descriptions
-    const descriptions = document.querySelectorAll("p.book-description");
-    for (let i = 0; i < descriptions.length; i++) {
-        $clamp(descriptions[i], { clamp: 2 });
+        const descriptions = document.querySelectorAll("p.book-description");
+        for (let i = 0; i < descriptions.length; i++) {
+            $clamp(descriptions[i], { clamp: 2 });
+        }
+
+        //Add event listeners
+        addEvents();
     }
-    //Add event listeners
-    addEvents();
 }
 
 //Add book event listeners
 
 function addEvents() {
+
     // Delete book button
     const delBtns = document.querySelectorAll(".book-delete");
     for (let i = 0; i < delBtns.length; i++) {
@@ -141,7 +177,7 @@ function addEvents() {
             const thisBook = btn.closest(".book");
             const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
             books.splice(getIndexById(id), 1);
-            popOut(thisBook)
+            popOut(thisBook);
         });
     }
 
@@ -166,7 +202,6 @@ function addEvents() {
 }
 
 function newId() {
-    //    console.log(`${books[books.length - 1].id} => ${parseInt(books[books.length - 1].id)}`);
     return id++;
     //`id${books[books.length - 1] ? parseInt(books[books.length - 1].id) + 1 : 0}`;
 }
@@ -196,12 +231,7 @@ function getBookByTitle(title) {
 
 function sampleBooks(amt) {
     for (let i = 0; i < amt; i++) {
-        addBookToLibrary(
-            "Book " + i,
-            "Author " + i,
-            i,
-            i % 2 == 0
-        );
+        addBookToLibrary("Book " + i, "Author " + i, i, i % 2 == 0);
     }
 }
 
@@ -213,35 +243,37 @@ function delay(time) {
 
 //Appear using the pop animation
 
-async function popIn(selector) {
-    console.log(selector)
-    const elements = selector === String(selector) ? document.querySelectorAll(selector) : [selector];
-    console.log(elements)
-    for (let i = 0; i < elements.length; i++) {
-        console.log(i);
-        console.log(elements[i])
-        elements[i].style.display = "flex";
-        elements[i].classList.add("popIn");
+async function popIn(target) {
+    const targets = selectorOrElemToArr(target);
+    for (let i = 0; i < targets.length; i++) {
+        targets[i].style.display = "flex";
+        targets[i].classList.add("popIn");
     }
     await delay(500);
-    for (let i = 0; i < elements.length; i++) {
-        elements[i].classList.remove("popIn");
+    for (let i = 0; i < targets.length; i++) {
+        targets[i].classList.remove("popIn");
     }
 }
 
 //Disappar using the pop animation
 
-async function popOut(selector) {
-    const elements = selector === String(selector) ? document.querySelectorAll(selector) : [selector];
-    for (let i = 0; i < elements.length; i++) {
-        elements[i].classList.add("popOut");
+async function popOut(target) {
+    const targets = selectorOrElemToArr(target);
+    for (let i = 0; i < targets.length; i++) {
+        targets[i].classList.add("popOut");
     }
     await delay(500);
-    for (let i = 0; i < elements.length; i++) {
-        elements[i].classList.remove("popOut");
-        elements[i].style.display = "none";
+    for (let i = 0; i < targets.length; i++) {
+        targets[i].classList.remove("popOut");
+        targets[i].style.display = "none";
     }
 }
 
+//If target is a string, use it as a selector, otherwise treat it as a DOM object
 
+function selectorOrElemToArr(target) {
+    return target === String(target)
+        ? document.querySelectorAll(target)
+        : [target];
+}
 setup();
