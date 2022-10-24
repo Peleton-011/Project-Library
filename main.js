@@ -28,29 +28,7 @@ const Book = function (
 };
 
 function setup() {
-    // Close form button
-    const closeBtn = document.querySelector("#form-top > #close");
-    closeBtn.addEventListener("click", () => {
-        popOut("#form-popup");
-    });
-
-    // Submit button
-    const submitBtn = document.querySelector("#submit");
-    submitBtn.addEventListener("click", () => {
-        const form = document.getElementById("new-book");
-        const formData = new FormData(form);
-
-        addBookToLibrary(
-            formData.get("title"),
-            formData.get("author"),
-            formData.get("pageLen"),
-            formData.get("isRead"),
-            formData.get("imgUrl"),
-            formData.get("desc")
-        );
-        popOut("#form-popup");
-    });
-
+    newBookFormSetup();
     //Add sample books to library
     sampleBooks(10);
     displayBooks();
@@ -65,7 +43,6 @@ function addBookToLibrary(
     description
 ) {
     books.push(new Book(title, author, pageLen, isRead, coverImg, description));
-    displayBooks();
 }
 
 function displayBooks() {
@@ -104,13 +81,17 @@ function displayBooks() {
     }
 
     //Actually add and delete books
+    console.log("Adding");
+    console.log(toAdd);
+    console.log("Deleting");
+    console.log(toDelete);
     removeBooks(toDelete);
     addBooks(toAdd);
 
-    function removeBooks(ids) {
+    async function removeBooks(ids) {
         for (let i = 0; i < ids.length; i++) {
             const target = `#id${ids[i]}`;
-            popOut(target);
+            await popOut(target);
             const targets = selectorOrElemToArr(target);
             for (let j = 0; j < targets.length; j++) {
                 bookList.removeChild(targets[j]);
@@ -118,11 +99,7 @@ function displayBooks() {
         }
     }
 
-    function addBooks(ids) {
-        //Remove newbook button
-        const newBookBtn = document.querySelector(".book.book-add");
-        newBookBtn && popOut(newBookBtn) && bookList.removeChild(newBookBtn);
-
+    async function addBooks(ids) {
         //Make new books html
         let newBooksHTML = "";
         for (let i = 0; i < ids.length; i++) {
@@ -133,9 +110,11 @@ function displayBooks() {
                 book.coverImg
             })">
             <div class="book-nav">
-                <button class="book-isRead ${book.isRead ? "isRead" : ""}">
+                <button class="book-isRead ${
+                    book.isRead ? "isRead" : ""
+                } poppy-button">
                 </button>
-                <button class="book-delete"></button>
+                <button class="book-delete poppy-button"></button>
             </div>
             <div class="book-info">
                 <h3 class="book-title">${book.title} - ${book.author}</h3>
@@ -149,11 +128,15 @@ function displayBooks() {
         }
 
         //Add to dom
-        bookList.innerHTML += `${newBooksHTML} <button class="book book-add">+</div>`;
+        bookList.innerHTML += `${newBooksHTML} <div class="newButtonContainer">
+            <button class="book book-add popOut-button">+</button>
+            </div>`;
         for (let i = 0; i < ids.length; i++) {
+            console.log("Ids");
+            console.log(ids);
             popIn(getBookById(ids[i]));
         }
-        popIn(".book.book-add");
+        await popIn(".book.book-add");
         //Add line clamping to book descriptions
         const descriptions = document.querySelectorAll("p.book-description");
         for (let i = 0; i < descriptions.length; i++) {
@@ -168,7 +151,6 @@ function displayBooks() {
 //Add book event listeners
 
 function addEvents() {
-
     // Delete book button
     const delBtns = document.querySelectorAll(".book-delete");
     for (let i = 0; i < delBtns.length; i++) {
@@ -198,6 +180,33 @@ function addEvents() {
     const newBookBtn = document.querySelector(".book-add");
     newBookBtn.addEventListener("click", () => {
         popIn("#form-popup");
+    });
+}
+
+//General setup for the newBook form
+
+function newBookFormSetup () {
+    // Close form button
+    const closeBtn = document.querySelector("#form-top > #close");
+    closeBtn.addEventListener("click", () => {
+        popOut("#form-popup");
+    });
+
+    // Submit button
+    const submitBtn = document.querySelector("#submit");
+    submitBtn.addEventListener("click", () => {
+        const form = document.getElementById("new-book");
+        const formData = new FormData(form);
+
+        addBookToLibrary(
+            formData.get("title"),
+            formData.get("author"),
+            formData.get("pageLen"),
+            formData.get("isRead"),
+            formData.get("imgUrl"),
+            formData.get("desc")
+        );
+        popOut("#form-popup");
     });
 }
 
@@ -245,8 +254,12 @@ function delay(time) {
 
 async function popIn(target) {
     const targets = selectorOrElemToArr(target);
+    console.log("popIn targets");
+    console.log(targets);
     for (let i = 0; i < targets.length; i++) {
-        targets[i].style.display = "flex";
+        console.log(targets[i])
+        targets[i].classlist.add("visible");
+        targets[i].classList.remove("not-visible");
         targets[i].classList.add("popIn");
     }
     await delay(500);
@@ -259,13 +272,16 @@ async function popIn(target) {
 
 async function popOut(target) {
     const targets = selectorOrElemToArr(target);
+    console.log("popOut targets");
+    console.log(targets);
     for (let i = 0; i < targets.length; i++) {
         targets[i].classList.add("popOut");
     }
     await delay(500);
     for (let i = 0; i < targets.length; i++) {
         targets[i].classList.remove("popOut");
-        targets[i].style.display = "none";
+        targets[i].classList.remove("visible");
+        targets[i].classList.add("not-visible");
     }
 }
 
@@ -276,4 +292,9 @@ function selectorOrElemToArr(target) {
         ? document.querySelectorAll(target)
         : [target];
 }
+
+//Plays an animation designed to indicate being pressed
+
+function pressAnimation(target) {}
+
 setup();

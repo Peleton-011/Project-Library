@@ -91,14 +91,22 @@ input {
     content: url("./icons/trash-can.svg");
 }
 
-.book-isRead:hover,
-.book-delete:active {
+.poppy-button:hover {
     cursor: pointer;
 }
 
-.book-isRead:active,
-.book-delete:active {
+.poppy-button:active {
     padding: 0.5rem;
+}
+
+.popOut-button:hover {
+    cursor: pointer;
+}
+
+.popOut-button:active {
+    background-color: black;
+    width: 100% - 2rem;
+    margin: 100% + 20rem;
 }
 
 .book-isRead.isRead::after {
@@ -239,6 +247,14 @@ input.invalid + p {
 
 .popOut {
     animation: pop 0.5s ease 0s 1;
+}
+
+.visible {
+    display: flex;
+}
+
+.not-visible {
+    display: none;
 }
 
 @media (max-width: 600px) {
