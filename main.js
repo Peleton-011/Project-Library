@@ -1,5 +1,8 @@
 let id = 0;
 
+const form = document.getElementById("form-popup");
+form.parentElement.removeChild(form);
+
 const books = [];
 
 const Book = function (
@@ -28,10 +31,9 @@ const Book = function (
 };
 
 function setup() {
-    newBookFormSetup();
     //Add sample books to library
     sampleBooks(10);
-    displayBooks();
+    displayBooks(books);
 }
 
 function addBookToLibrary(
@@ -45,147 +47,124 @@ function addBookToLibrary(
     books.push(new Book(title, author, pageLen, isRead, coverImg, description));
 }
 
-function displayBooks() {
-    const bookList = document.getElementById("book-list");
+function displayBooks(
+    books,
+    DOMBooks = Array.from(document.getElementById("book-list").children)
+) {
+    if (typeof books !== "object") {
+        books = [books];
+    }
+
+    const bookCanvas = document.getElementById("book-list");
+
     //Remove add book button
     const newBookBtn = document.querySelector(".book.book-add");
-    newBookBtn && popOut(newBookBtn);
-    //Find displayed books
-    const displayedBooksId = [];
-    const correctlyDisplayed = [];
-    const toDelete = [];
-    const toAdd = [];
-    for (let i = 0; i < bookList.children.length; i++) {
-        displayedBooksId.push(
-            Number(bookList.children[i].id.replace(/[^0-9]/g, ""))
-        );
-    }
-    for (let i = 0; i < displayedBooksId.length; i++) {
-        for (let j = 0; j < books.length; j++) {
-            if (displayedBooksId[i] == books[j].id) {
-                correctlyDisplayed.push(displayedBooksId[i]);
-                continue;
+    newBookBtn && hide(newBookBtn);
+
+    for (let i = 0; i < books.length; i++) {   
+        const book = books[i];
+
+        let alreadyDisplayed = false;
+        for (let j = 0; j < DOMBooks.length; j++) {
+            if (book.id === DOMBooks[j].id.replace(/[^0-9]/g, "")) {
+                alreadyDisplayed = true;
+                break;
             }
         }
-        //Delete books which are being displayed but are not inside the books[] array
-        toDelete.push(displayedBooksId[i]);
-    }
-    for (let i = 0; i < books.length; i++) {
-        for (let j = 0; j < correctlyDisplayed.length; j++) {
-            if (books[i].id == correctlyDisplayed[j]) {
-                continue;
-            }
-        }
-        //Add books which are inside the books[] array but not being displayed
-        toAdd.push(books[i].id);
-    }
-
-    //Actually add and delete books
-    console.log("Adding");
-    console.log(toAdd);
-    console.log("Deleting");
-    console.log(toDelete);
-    removeBooks(toDelete);
-    addBooks(toAdd);
-
-    async function removeBooks(ids) {
-        for (let i = 0; i < ids.length; i++) {
-            const target = `#id${ids[i]}`;
-            await popOut(target);
-            const targets = selectorOrElemToArr(target);
-            for (let j = 0; j < targets.length; j++) {
-                bookList.removeChild(targets[j]);
-            }
+        if (!alreadyDisplayed) {
+            display(book, bookCanvas);
+            addEvents(book);
         }
     }
 
-    async function addBooks(ids) {
-        //Make new books html
-        let newBooksHTML = "";
-        for (let i = 0; i < ids.length; i++) {
-            const book = getBookById(ids[i]);
-            const desc = book.description ? book.description : "...";
-            newBooksHTML += `
-            <div class="book" id="id${book.id}" style="background-image: url(${
-                book.coverImg
-            })">
-            <div class="book-nav">
-                <button class="book-isRead ${
-                    book.isRead ? "isRead" : ""
-                } poppy-button">
-                </button>
-                <button class="book-delete poppy-button"></button>
-            </div>
-            <div class="book-info">
-                <h3 class="book-title">${book.title} - ${book.author}</h3>
-                <p class="book-description">${desc}</p>
-                <p class="book-pageLen">${
-                    book.pageLen ? book.pageLen + " pgs" : "length unknown"
-                }</p>
-            </div>
-            </div>
-            `;
-        }
-
-        //Add to dom
-        bookList.innerHTML += `${newBooksHTML} <div class="newButtonContainer">
+    if (!document.querySelector(".book.book-add")) {
+        bookCanvas.innerHTML += `
+        <div class="newButtonContainer">
             <button class="book book-add popOut-button">+</button>
-            </div>`;
-        for (let i = 0; i < ids.length; i++) {
-            console.log("Ids");
-            console.log(ids);
-            popIn(getBookById(ids[i]));
-        }
-        await popIn(".book.book-add");
-        //Add line clamping to book descriptions
-        const descriptions = document.querySelectorAll("p.book-description");
-        for (let i = 0; i < descriptions.length; i++) {
-            $clamp(descriptions[i], { clamp: 2 });
-        }
-
-        //Add event listeners
-        addEvents();
+        </div>
+        `;
     }
+}
+
+function display(book, target) {
+    target.innerHTML += generateBookHTML(book);
+    popIn(book);
+    addEvents(book);
+}
+
+function generateBookHTML(book) {
+    if (!book) {
+        return "";
+    }
+    const desc = book.description ? book.description : "...";
+    const newBooksHTML = `
+    <div class="book" id="id${book.id}" style="background-image: url(${
+        book.coverImg
+    })">
+    <div class="book-nav">
+        <button class="book-isRead ${book.isRead ? "isRead" : ""} poppy-button">
+        </button>
+        <button class="book-delete poppy-button"></button>
+    </div>
+    <div class="book-info">
+        <h3 class="book-title">${book.title} - ${book.author}</h3>
+        <p class="book-description">${desc}</p>
+        <p class="book-pageLen">${
+            book.pageLen ? book.pageLen + " pgs" : "length unknown"
+        }</p>
+    </div>
+    </div>
+    `;
+    return newBooksHTML;
 }
 
 //Add book event listeners
 
-function addEvents() {
+function addEvents(book) {
+    console.log("adding events to");
+    console.log(book);
     // Delete book button
-    const delBtns = document.querySelectorAll(".book-delete");
-    for (let i = 0; i < delBtns.length; i++) {
-        const btn = delBtns[i];
-        btn.addEventListener("mousedown", async () => {
-            const thisBook = btn.closest(".book");
-            const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
-            books.splice(getIndexById(id), 1);
-            popOut(thisBook);
-        });
-    }
+    const delBtn = document.querySelector(
+        `#id${book.id} > .book-nav > .book-delete`
+    );
+    delBtn.addEventListener("mousedown", () => {
+        console.log("poop");
+        const thisBook = delBtn.closest(".book");
+        const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
+        books.splice(getIndexById(id), 1);
+        popOut(`#id${id}`);
+    });
 
     // Read/Not-Read toggle button
-    const readBtns = document.querySelectorAll(".book-isRead");
-    for (let i = 0; i < readBtns.length; i++) {
-        const btn = readBtns[i];
-        btn.addEventListener("mousedown", async () => {
-            const id = Number(btn.closest(".book").id.replace(/[^0-9]/g, ""));
-            const book = getBookById(id);
-            book.isRead = !book.isRead;
-            await delay(250);
-            btn.classList.toggle("isRead");
-        });
-    }
+    const readBtn = document.querySelector(
+        `#id${book.id} > .book-nav > .book-isRead`
+    );
+    readBtn.style.border = "1px solid black";
+    readBtn.addEventListener("mousedown", async () => {
+        console.log("cum");
+        const id = Number(readBtn.closest(".book").id.replace(/[^0-9]/g, ""));
+        const book = books[getIndexById(id)];
+        book.isRead = !book.isRead;
+        await delay(250);
+        readBtn.classList.toggle("isRead");
+    });
 
-    // New-book button
+    // To do description interaction
+}
+// New-book button events
+function newBookBtnEvents() {
     const newBookBtn = document.querySelector(".book-add");
     newBookBtn.addEventListener("click", () => {
+        const bookCanvas = document.getElementById("book-list");
+        bookCanvas.appendChild(form);
         popIn("#form-popup");
+        newBookFormSetup();
     });
 }
 
 //General setup for the newBook form
 
-function newBookFormSetup () {
+function newBookFormSetup() {
     // Close form button
     const closeBtn = document.querySelector("#form-top > #close");
     closeBtn.addEventListener("click", () => {
@@ -215,27 +194,6 @@ function newId() {
     //`id${books[books.length - 1] ? parseInt(books[books.length - 1].id) + 1 : 0}`;
 }
 
-// Get the book by id
-
-function getBookById(id) {
-    const index = books.findIndex((book) => book.id == id);
-    return books[index];
-}
-
-// Get the index by id
-
-function getIndexById(id) {
-    const index = books.findIndex((book) => book.id == id);
-    return index;
-}
-
-// Get the book by title
-
-function getBookByTitle(title) {
-    const index = books.findIndex((book) => book.title == title);
-    return books[index];
-}
-
 //Add sample books to library
 
 function sampleBooks(amt) {
@@ -252,45 +210,54 @@ function delay(time) {
 
 //Appear using the pop animation
 
-async function popIn(target) {
-    const targets = selectorOrElemToArr(target);
-    console.log("popIn targets");
-    console.log(targets);
-    for (let i = 0; i < targets.length; i++) {
-        console.log(targets[i])
-        targets[i].classlist.add("visible");
-        targets[i].classList.remove("not-visible");
-        targets[i].classList.add("popIn");
+async function popIn(selector) {
+    let targets
+    if (typeof selector === "object") {
+        targets = Array.from(
+            document.querySelectorAll(`#id${selector.id}`)
+        );
+        console.log(targets);
     }
-    await delay(500);
+    if (typeof selector === "string") {
+        targets = Array.from(document.querySelectorAll(selector));
+        console.log(targets);
+        console.log(selector);
+    }
     for (let i = 0; i < targets.length; i++) {
-        targets[i].classList.remove("popIn");
+        const target = targets[i];
+        target.classList.add("popIn");
+        await delay(500);
+        target.classList.remove("popIn");
     }
 }
 
 //Disappar using the pop animation
 
-async function popOut(target) {
-    const targets = selectorOrElemToArr(target);
-    console.log("popOut targets");
-    console.log(targets);
-    for (let i = 0; i < targets.length; i++) {
-        targets[i].classList.add("popOut");
+async function popOut(selector, isKept) {
+    if (typeof selector === "object") {
+        const targets = Array.from(
+            document.querySelectorAll(`#id${selector.id}`)
+        );
     }
-    await delay(500);
+    if (typeof selector === "string") {
+        const targets = [...document.querySelectorAll(selector)];
+    }
     for (let i = 0; i < targets.length; i++) {
-        targets[i].classList.remove("popOut");
-        targets[i].classList.remove("visible");
-        targets[i].classList.add("not-visible");
+        const target = targets[i];
+        target.classList.add("popOut");
+        await delay(500);
+        target.classList.remove("popOut");
+        if (!isKept) {
+            target.parentElement.removeChild(target);
+        }
     }
 }
 
-//If target is a string, use it as a selector, otherwise treat it as a DOM object
+// Get the book index from an id
 
-function selectorOrElemToArr(target) {
-    return target === String(target)
-        ? document.querySelectorAll(target)
-        : [target];
+function getIndexById(id) {
+    const index = books.findIndex((book) => book.id == id);
+    return index;
 }
 
 //Plays an animation designed to indicate being pressed

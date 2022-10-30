@@ -145,7 +145,6 @@ input {
 /* Form popup */
 
 #form-popup {
-    display: none;
     position: fixed;
     left: 50%;
     top: 50%;
@@ -247,14 +246,6 @@ input.invalid + p {
 
 .popOut {
     animation: pop 0.5s ease 0s 1;
-}
-
-.visible {
-    display: flex;
-}
-
-.not-visible {
-    display: none;
 }
 
 @media (max-width: 600px) {
