@@ -34,6 +34,7 @@ function setup() {
     //Add sample books to library
     sampleBooks(10);
     displayBooks(books);
+    addEvents();
 }
 
 function addBookToLibrary(
@@ -150,6 +151,36 @@ function addEvents() {
         popIn("#form-popup");
         newBookFormSetup();
     });
+}
+
+function addEvents() {
+    const delBtns = document.querySelectorAll(".book-delete");
+    for (let i = 0; i < delBtns.length; i++) {
+        const btn = delBtns[i];
+
+        const outerThisBook = btn.closest(".book");
+        console.log(outerThisBook);
+
+        btn.addEventListener("mousedown", async () => {
+            const thisBook = btn.closest(".book");
+            const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
+            books.splice(getIndexById(id), 1);
+            popOut(idToSelector(id));
+        });
+    }
+
+    // Read/Not-Read toggle button
+    const readBtns = document.querySelectorAll(".book-isRead");
+    for (let i = 0; i < readBtns.length; i++) {
+        const btn = readBtns[i];
+        btn.addEventListener("mousedown", async () => {
+            const id = Number(btn.closest(".book").id.replace(/[^0-9]/g, ""));
+            const book = getBookById(id);
+            book.isRead = !book.isRead;
+            await delay(250);
+            btn.classList.toggle("isRead");
+        });
+    }
 }
 
 //Add book event listeners
@@ -291,40 +322,6 @@ function getIndexById(id) {
     return index;
 }
 
-//Plays an animation designed to indicate being pressed
-
-function pressAnimation(target) { }
-
-setup();
-
-const delBtns = document.querySelectorAll(".book-delete");
-for (let i = 0; i < delBtns.length; i++) {
-    const btn = delBtns[i];
-
-    const outerThisBook = btn.closest(".book");
-    console.log(outerThisBook);
-
-    btn.addEventListener("mousedown", async () => {
-        const thisBook = btn.closest(".book");
-        const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
-        books.splice(getIndexById(id), 1);
-        popOut(idToSelector(id));
-    });
-}
-
-// Read/Not-Read toggle button
-const readBtns = document.querySelectorAll(".book-isRead");
-for (let i = 0; i < readBtns.length; i++) {
-    const btn = readBtns[i];
-    btn.addEventListener("mousedown", async () => {
-        const id = Number(btn.closest(".book").id.replace(/[^0-9]/g, ""));
-        const book = getBookById(id);
-        book.isRead = !book.isRead;
-        await delay(250);
-        btn.classList.toggle("isRead");
-    });
-}
-
 function getBookById(id) {
     const index = books.findIndex((book) => book.id == id);
     return books[index];
@@ -333,3 +330,9 @@ function getBookById(id) {
 function idToSelector(id) {
     return `#id${id}`;
 }
+
+//Plays an animation designed to indicate being pressed
+
+function pressAnimation(target) { }
+
+setup();
