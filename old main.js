@@ -10,7 +10,7 @@ const Book = function (
     author,
     pageLen,
     isRead,
-    coverImg,
+    coverImg,,,,n
     description,
     id
 ) {
