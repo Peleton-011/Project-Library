@@ -1,8 +1,5 @@
 let id = 0;
 
-const form = document.getElementById("form-popup");
-form.parentElement.removeChild(form);
-
 const books = [];
 
 const Book = function (
@@ -16,7 +13,7 @@ const Book = function (
 ) {
     (this.title = String(title) || "Untitled"),
         (this.author = String(author) || "Anonymous"),
-        (this.pageLen = Number(pageLen)),
+        (this.pageLen = Number(pageLen) || "length unknown"),
         (this.isRead = Boolean(isRead) || false),
         (this.info = () => {
             let readStatus = this.isRead ? "already read" : "not read yet";
@@ -34,7 +31,14 @@ function setup() {
     //Add sample books to library
     sampleBooks(10);
     displayBooks(books);
-    addEvents();
+
+    setTimeout(() => {
+        const initBooks = Array.from(document.querySelectorAll(".book"));
+        for (let i = 0; i < initBooks.length; i++) {
+            const initBook = initBooks[i];
+            initBook.classList.remove("popIn");
+        }
+    }, 500);
 }
 
 function addBookToLibrary(
@@ -52,15 +56,16 @@ function displayBooks(
     books,
     DOMBooks = Array.from(document.getElementById("book-list").children)
 ) {
-    if (typeof books !== "object") {
-        books = [books];
+    if (!books.length) {
+        books = new Array(books);
     }
 
+    console.log(books);
     const bookCanvas = document.getElementById("book-list");
 
     //Remove add book button
     const newBookBtn = document.querySelector(".book.book-add");
-    newBookBtn && hide(newBookBtn);
+    newBookBtn && hide(newBookBtn.parentNode);
 
     for (let i = 0; i < books.length; i++) {
         const book = books[i];
@@ -76,7 +81,8 @@ function displayBooks(
             display(book, bookCanvas);
         }
     }
-
+    addEvents();
+    
     if (!document.querySelector(".book.book-add")) {
         bookCanvas.innerHTML += `
         <div class="newButtonContainer">
@@ -84,11 +90,16 @@ function displayBooks(
         </div>
         `;
     }
+    newBookBtnEvents();
 }
 
 function display(book, target) {
     target.innerHTML += generateBookHTML(book);
-    popIn(book);
+}
+
+function hide(elem) {
+    const parent = elem.parentNode;
+    parent.removeChild(elem);
 }
 
 function generateBookHTML(book) {
@@ -97,8 +108,9 @@ function generateBookHTML(book) {
     }
     const desc = book.description ? book.description : "...";
     const newBooksHTML = `
-    <div class="book" id="id${book.id}" style="background-image: url(${book.coverImg
-        })">
+    <div class="book popIn" id="id${book.id}" style="background-image: url(${
+        book.coverImg
+    })">
     <div class="book-nav">
         <button class="book-isRead ${book.isRead ? "isRead" : ""} poppy-button">
         </button>
@@ -107,7 +119,8 @@ function generateBookHTML(book) {
     <div class="book-info">
         <h3 class="book-title">${book.title} - ${book.author}</h3>
         <p class="book-description">${desc}</p>
-        <p class="book-pageLen">${book.pageLen ? book.pageLen + " pgs" : "length unknown"
+        <p class="book-pageLen">${
+            book.pageLen ? book.pageLen + " pgs" : "length unknown"
         }</p>
     </div>
     </div>
@@ -118,49 +131,9 @@ function generateBookHTML(book) {
 //Add book event listeners
 
 function addEvents() {
-    // Delete book button
     const delBtns = document.querySelectorAll(".book-delete");
     for (let i = 0; i < delBtns.length; i++) {
         const btn = delBtns[i];
-        btn.addEventListener("mousedown", async () => {
-            const thisBook = btn.closest(".book");
-            const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
-            books.splice(getIndexById(id), 1);
-            popOut(idToSelector(id));
-        });
-    }
-
-    // Read/Not-Read toggle button
-    const readBtns = document.querySelectorAll(".book-isRead");
-    for (let i = 0; i < readBtns.length; i++) {
-        const btn = readBtns[i];
-        btn.addEventListener("mousedown", async () => {
-            const id = Number(btn.closest(".book").id.replace(/[^0-9]/g, ""));
-            const book = getBookById(id);
-            book.isRead = !book.isRead;
-            await delay(250);
-            btn.classList.toggle("isRead");
-        });
-    }
-
-    // New-book button
-    const newBookBtn = document.querySelector(".book-add");
-    newBookBtn.addEventListener("click", () => {
-        const bookList = document.getElementById("book-list");
-        bookList.appendChild(form);
-        popIn("#form-popup");
-        newBookFormSetup();
-    });
-}
-
-function addEvents() {
-    const delBtns = document.querySelectorAll(".book-delete");
-    for (let i = 0; i < delBtns.length; i++) {
-        const btn = delBtns[i];
-
-        const outerThisBook = btn.closest(".book");
-        console.log(outerThisBook);
-
         btn.addEventListener("mousedown", async () => {
             const thisBook = btn.closest(".book");
             const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
@@ -209,13 +182,12 @@ function addEvents() {
 //     // To do description interaction
 // }
 
-
 // New-book button events
 function newBookBtnEvents() {
     const newBookBtn = document.querySelector(".book-add");
     newBookBtn.addEventListener("click", () => {
         const bookCanvas = document.getElementById("book-list");
-        bookCanvas.appendChild(form);
+        addForm();
         popIn("#form-popup");
         newBookFormSetup();
     });
@@ -244,6 +216,10 @@ function newBookFormSetup() {
             formData.get("imgUrl"),
             formData.get("desc")
         );
+        console.log(books[books.length - 1]);
+        console.log(form);
+        console.log(formData);
+        displayBooks(books[books.length - 1]);
         popOut("#form-popup");
     });
 }
@@ -269,49 +245,45 @@ function delay(time) {
 
 //Appear using the pop animation
 
-async function popIn(selector) {
-    let targets
+function popIn(selector) {
+    let targets;
     if (typeof selector === "object") {
-        targets = Array.from(
-            document.querySelectorAll(`#id${selector.id}`)
-        );
+        targets = Array.from(document.querySelectorAll(`#id${selector.id}`));
         console.log(targets);
     } else if (typeof selector === "string") {
         targets = Array.from(document.querySelectorAll(selector));
     } else {
-        console.log("Error Wrong Type")
+        console.log("Error Wrong Type");
     }
     for (let i = 0; i < targets.length; i++) {
         const target = targets[i];
         target.classList.add("popIn");
-        await delay(500);
-        target.classList.remove("popIn");
+        setTimeout(() => target.classList.remove("popIn"), 500);
     }
 }
 
 //Disappar using the pop animation
 
-async function popOut(selector, isKept) {
+function popOut(selector, isKept) {
     let targets;
     if (typeof selector === "object") {
-        targets = Array.from(
-            document.querySelectorAll(`#id${selector.id}`)
-        );
+        targets = Array.from(document.querySelectorAll(`#id${selector.id}`));
         console.log(targets);
     } else if (typeof selector === "string") {
         targets = Array.from(document.querySelectorAll(selector));
     } else {
-        console.log("Error Wrong Type")
+        console.log("Error Wrong Type");
     }
 
     for (let i = 0; i < targets.length; i++) {
         const target = targets[i];
         target.classList.add("popOut");
-        await delay(500);
-        target.classList.remove("popOut");
-        if (!isKept) {
-            target.parentElement.removeChild(target);
-        }
+        setTimeout(() => {
+            target.classList.remove("popOut");
+            if (!isKept) {
+                target.parentElement.removeChild(target);
+            }
+        }, 500);
     }
 }
 
@@ -331,8 +303,86 @@ function idToSelector(id) {
     return `#id${id}`;
 }
 
+function addForm() {
+    const bookCanvas = document.querySelector("#book-list");
+    const formHTML = `
+        <div id="form-popup">
+            <form id="new-book">
+                <div id="form-top">
+                    <legend id="new-book-legend">Add Book</legend>
+                    <button id="close"></button>
+                </div>
+
+                <div class="input-group">
+                    <label for="title">Title:</label>
+                    <input type="text" name="title" id="title" required
+                    maxlength=40" placeholder="The Banquet" />
+                    <p>
+                        Title must not contain special characters and be
+                        shorter than 40
+                    </p>
+                </div>
+
+                <div class="input-group">
+                    <label for="author">Author:</label>
+                    <input
+                        type="text"
+                        name="author"
+                        id="author"
+                        maxlength="20"
+                        placeholder="Plato"
+                    />
+                    <p>
+                        Author must not contain special characters and be
+                        shorter than 40
+                    </p>
+                </div>
+
+                <div class="input-group">
+                    <label for="desc">Description:</label>
+                    <br />
+                    <textarea
+                        name="desc"
+                        id="desc"
+                        rows="6"
+                        maxlength="100"
+                        placeholder="Add a short description in 100 characters o less"
+                    ></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="page-len">Length in pages:</label>
+                    <input
+                        type="number"
+                        name="pageLen"
+                        id="page-len"
+                        placeholder="296"
+                    />
+                    <p>Length in pages must only contain numbers</p>
+                </div>
+
+                <div class="input-group checkbox">
+                    <label for="is-read">Have you read it?</label>
+                    <input type="checkbox" name="isRead" id="is-read" />
+                </div>
+
+                <div class="input-group">
+                    <label for="img-url">Cover image URL:</label>
+                    <input
+                        type="text"
+                        name="imgUrl"
+                        id="img-url"
+                        placeholder="www.images.net/myImages/02"
+                    />
+                </div>
+            </form>
+            <button id="submit">Add Book</button>
+        </div>`;
+    bookCanvas.innerHTML += formHTML;
+}
+
 //Plays an animation designed to indicate being pressed
 
-function pressAnimation(target) { }
+function pressAnimation(target) {}
 
 setup();
