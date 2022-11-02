@@ -89,7 +89,6 @@ function displayBooks(
 function display(book, target) {
     target.innerHTML += generateBookHTML(book);
     popIn(book);
-    addEvents(book);
 }
 
 function generateBookHTML(book) {
@@ -121,13 +120,13 @@ function generateBookHTML(book) {
 //Add book event listeners
 
 function addEvents(book) {
-    console.log("adding events to");
-    console.log(book);
     // Delete book button
     const delBtn = document.querySelector(
         `#id${book.id} > .book-nav > .book-delete`
-    );
-    delBtn.addEventListener("mousedown", () => {
+        );
+    console.log(delBtn);
+    delBtn.style.border = "5px solid black";
+    delBtn.addEventListener("click", () => {
         console.log("poop");
         const thisBook = delBtn.closest(".book");
         const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
@@ -139,8 +138,7 @@ function addEvents(book) {
     const readBtn = document.querySelector(
         `#id${book.id} > .book-nav > .book-isRead`
     );
-    readBtn.style.border = "1px solid black";
-    readBtn.addEventListener("mousedown", async () => {
+    readBtn.addEventListener("click", async () => {
         console.log("cum");
         const id = Number(readBtn.closest(".book").id.replace(/[^0-9]/g, ""));
         const book = books[getIndexById(id)];
