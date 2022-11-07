@@ -33,13 +33,13 @@ function setup() {
     displayBooks(books);
     addEvents();
 
-    setTimeout(() => {
-        const initBooks = Array.from(document.querySelectorAll(".book"));
-        for (let i = 0; i < initBooks.length; i++) {
-            const initBook = initBooks[i];
-            initBook.classList.remove("popIn");
-        }
-    }, 500);
+    // setTimeout(() => {
+    //     const initBooks = Array.from(document.querySelectorAll(".book"));
+    //     for (let i = 0; i < initBooks.length; i++) {
+    //         const initBook = initBooks[i];
+    //         initBook.classList.remove("popIn");
+    //     }
+    // }, 500);
 }
 
 function addBookToLibrary(
@@ -195,6 +195,7 @@ function addEvents() {
 function newBookBtnEvents() {
     const newBookBtn = document.querySelector(".book-add");
     newBookBtn.addEventListener("click", () => {
+        console.log("making new form");
         const bookCanvas = document.getElementById("book-list");
         addForm();
         popIn("#form-popup");
@@ -208,6 +209,12 @@ function newBookFormSetup() {
     // Close form button
     const closeBtn = document.querySelector("#form-top > #close");
     closeBtn.addEventListener("click", () => {
+        const form = document.getElementById("new-book");
+        const inputs = Array.from(form.querySelectorAll("input"));
+        for (let i = 0; i < inputs.length; i++) {
+            const input = inputs[i];
+            input.value = "";
+        }
         popOut("#form-popup");
     });
 
