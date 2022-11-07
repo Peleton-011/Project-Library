@@ -31,6 +31,7 @@ function setup() {
     //Add sample books to library
     sampleBooks(10);
     displayBooks(books);
+    addEvents();
 
     setTimeout(() => {
         const initBooks = Array.from(document.querySelectorAll(".book"));
@@ -60,7 +61,6 @@ function displayBooks(
         books = new Array(books);
     }
 
-    console.log(books);
     const bookCanvas = document.getElementById("book-list");
 
     //Remove add book button
@@ -81,7 +81,6 @@ function displayBooks(
             display(book, bookCanvas);
         }
     }
-    addEvents();
     
     if (!document.querySelector(".book.book-add")) {
         bookCanvas.innerHTML += `
@@ -134,8 +133,8 @@ function addEvents() {
     const delBtns = document.querySelectorAll(".book-delete");
     for (let i = 0; i < delBtns.length; i++) {
         const btn = delBtns[i];
+        const thisBook = btn.closest(".book");
         btn.addEventListener("mousedown", async () => {
-            const thisBook = btn.closest(".book");
             const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
             books.splice(getIndexById(id), 1);
             popOut(idToSelector(id));
@@ -146,12 +145,22 @@ function addEvents() {
     const readBtns = document.querySelectorAll(".book-isRead");
     for (let i = 0; i < readBtns.length; i++) {
         const btn = readBtns[i];
+        const thisBook = btn.closest(".book");
         btn.addEventListener("mousedown", async () => {
-            const id = Number(btn.closest(".book").id.replace(/[^0-9]/g, ""));
+            const id = Number(thisBook.id.replace(/[^0-9]/g, ""));
             const book = getBookById(id);
             book.isRead = !book.isRead;
             await delay(250);
             btn.classList.toggle("isRead");
+        });
+    }
+
+    //Remove popIn after animation end
+    const books = Array.from(document.querySelectorAll(".book"));
+    for (let i = 0; i < books.length; i++) {
+        const book = books[i];
+        book.addEventListener("animationend", () => {
+            book.classList.remove("popIn");
         });
     }
 }
@@ -220,6 +229,7 @@ function newBookFormSetup() {
         console.log(form);
         console.log(formData);
         displayBooks(books[books.length - 1]);
+        addEvents();
         popOut("#form-popup");
     });
 }
