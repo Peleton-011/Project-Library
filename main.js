@@ -83,17 +83,16 @@ function displayBooks(
     }
 
     if (!document.querySelector(".book.book-add")) {
-        bookCanvas.innerHTML += `
-        <div class="newButtonContainer">
+        bookCanvas.insertAdjacentHTML("beforeend", `<div class="newButtonContainer">
             <button class="book book-add popOut-button">+</button>
         </div>
-        `;
+        `);
     }
     newBookBtnEvents();
 }
 
 function display(book, target) {
-    target.innerHTML += generateBookHTML(book);
+    target.insertAdjacentHTML("beforeend", generateBookHTML(book));
 }
 
 function hide(elem) {
@@ -230,9 +229,6 @@ function newBookFormSetup() {
             formData.get("imgUrl"),
             formData.get("desc")
         );
-        console.log(books[books.length - 1]);
-        console.log(form);
-        console.log(formData);
         displayBooks(books[books.length - 1]);
         addEvents();
         popOut("#form-popup");
@@ -393,7 +389,7 @@ function addForm() {
             </form>
             <button id="submit">Add Book</button>
         </div>`;
-    bookCanvas.innerHTML += formHTML;
+    bookCanvas.insertAdjacentHTML("beforeend", formHTML);
 }
 
 //Plays an animation designed to indicate being pressed
