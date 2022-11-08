@@ -11,20 +11,20 @@ const Book = function (
     description,
     id
 ) {
-    (this.title = String(title) || "Untitled"),
-        (this.author = String(author) || "Anonymous"),
-        (this.pageLen = Number(pageLen) || "length unknown"),
-        (this.isRead = Boolean(isRead) || false),
-        (this.info = () => {
+    this.title = typeof (title) !== "string" ? "Untitled" : title,
+        this.author = typeof (author) !== "string" ? "Anonymous" : author,
+        this.pageLen = typeof (pageLen) !== "number" ? "length unknown" : pageLen,
+        this.isRead = typeof (isRead) !== "boolean" ? false : isRead,
+        this.info = () => {
             let readStatus = this.isRead ? "already read" : "not read yet";
             return `${this.title} by ${this.author}, ${this.pageLen} pages, ${readStatus}`;
-        });
-    this.coverImg = String(coverImg) || null;
-    this.description =
-        description === undefined
+        },
+        this.coverImg = typeof (coverImg) !== "string" ? "" : coverImg,
+        this.description =
+        typeof (description) !== "string"
             ? "Read to find out more!"
-            : String(description);
-    this.id = id || newId();
+            : description,
+        this.id = typeof (id) !== "number" ? newId() : id
 };
 
 function setup() {
@@ -81,7 +81,7 @@ function displayBooks(
             display(book, bookCanvas);
         }
     }
-    
+
     if (!document.querySelector(".book.book-add")) {
         bookCanvas.innerHTML += `
         <div class="newButtonContainer">
@@ -107,9 +107,8 @@ function generateBookHTML(book) {
     }
     const desc = book.description ? book.description : "...";
     const newBooksHTML = `
-    <div class="book popIn" id="id${book.id}" style="background-image: url(${
-        book.coverImg
-    })">
+    <div class="book popIn" id="id${book.id}" style="background-image: url(${book.coverImg
+        })">
     <div class="book-nav">
         <button class="book-isRead ${book.isRead ? "isRead" : ""} poppy-button">
         </button>
@@ -118,8 +117,7 @@ function generateBookHTML(book) {
     <div class="book-info">
         <h3 class="book-title">${book.title} - ${book.author}</h3>
         <p class="book-description">${desc}</p>
-        <p class="book-pageLen">${
-            book.pageLen ? book.pageLen + " pgs" : "length unknown"
+        <p class="book-pageLen">${book.pageLen ? book.pageLen + " pgs" : "length unknown"
         }</p>
     </div>
     </div>
@@ -400,6 +398,6 @@ function addForm() {
 
 //Plays an animation designed to indicate being pressed
 
-function pressAnimation(target) {}
+function pressAnimation(target) { }
 
 setup();
