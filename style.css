@@ -16,7 +16,7 @@
         var(--lightness)
     );
 
-    --book-width: 200px;
+    --book-width: 210px;
 }
 
 * {
@@ -56,6 +56,7 @@ input {
 
 .book {
     background-color: blueviolet;
+    background-size: cover;
     padding: 1rem;
     display: flex;
     gap: 3rem;
@@ -123,6 +124,7 @@ input {
     margin: -1rem;
     padding: 0.5rem 1rem;
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
@@ -139,7 +141,9 @@ input {
 
 .book-pageLen {
     font-size: 75%;
-    align-self: flex-end;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
 }
 
 /* Form popup */
