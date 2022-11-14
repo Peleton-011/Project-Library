@@ -106,8 +106,8 @@ function generateBookHTML(book) {
     }
     const desc = book.description ? book.description : "";
     const newBooksHTML = `
-    <div class="book popIn" id="id${book.id}" style="background-image: url(${book.coverImg
-        })">
+    <div class="book popIn" id="id${book.id}">
+    <div class="background" style="background-image: url(${book.coverImg})"></div>
     <div class="book-nav">
         <button class="book-isRead ${book.isRead ? "isRead" : ""} poppy-button">
         </button>

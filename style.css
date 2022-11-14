@@ -5,16 +5,12 @@
     --rotation: 60;
     color: #222;
     --main-color: hsl(var(--base-hue), var(--saturation), var(--lightness));
-    --sec-color: hsl(
-        calc(var(--base-hue) + var(--rotation)),
-        var(--saturation),
-        var(--lightness)
-    );
-    --ter-color: hsl(
-        calc(var(--base-hue) + var(--rotation) * 2),
-        var(--saturation),
-        var(--lightness)
-    );
+    --sec-color: hsl(calc(var(--base-hue) + var(--rotation)),
+            var(--saturation),
+            var(--lightness));
+    --ter-color: hsl(calc(var(--base-hue) + var(--rotation) * 2),
+            var(--saturation),
+            var(--lightness));
 
     --book-width: 210px;
 }
@@ -37,7 +33,7 @@ body {
     min-height: 100vh;
 }
 
-.neumorph, 
+.neumorph,
 #form-popup,
 input {
     background: rgba(0, 0, 0, 0.25);
@@ -54,15 +50,28 @@ input {
     padding: 3rem;
 }
 
-.book {
+.background {
+    width: calc(100% + 2rem);
+    height: calc(100% + 2rem);
+    margin: -1rem;
+    position: absolute;
+    left: calc(50% + 1rem);
+    bottom: 1rem;
+    transform: translateX(-50%);
     background-color: blueviolet;
     background-size: cover;
+}
+
+.book {
+    background-color: transparent;
     padding: 1rem;
     display: flex;
     gap: 3rem;
     flex-direction: column;
     justify-content: space-between;
     aspect-ratio: 3/4;
+    overflow: hidden;
+    position: relative;
 }
 
 .book-nav {
@@ -161,13 +170,13 @@ input {
     align-items: center;
 }
 
-#form-top > #close {
+#form-top>#close {
     background-image: url("./icons/close.svg");
     width: 2rem;
     height: 2rem;
 }
 
-#form-top > #close:hover {
+#form-top>#close:hover {
     cursor: pointer;
 }
 
@@ -179,7 +188,7 @@ input {
 }
 
 /* Revisar vv */
-#new-book > button {
+#new-book>button {
     height: 2rem;
 
     transition: all 0.2s linear;
@@ -226,13 +235,13 @@ input.invalid:focus {
     outline-color: var(--secondary-color);
 }
 
-input + p {
+input+p {
     color: var(--secondary-color);
     opacity: 0;
     font-size: 0.75rem;
 }
 
-input.invalid + p {
+input.invalid+p {
     opacity: 1;
 }
 
@@ -262,7 +271,7 @@ input.invalid + p {
         grid-column: auto;
     }
 
-    #new-book > button {
+    #new-book>button {
         grid-column: auto;
     }
 }
@@ -271,28 +280,34 @@ input.invalid + p {
     0% {
         transform: scale(100%);
     }
+
     10% {
         transform: scale(110%);
     }
+
     60% {
         transform: scale(50%);
     }
+
     100% {
         transform: scale(0%);
     }
-    
+
 }
 
 @keyframes shake {
     0% {
         margin-left: 0rem;
     }
+
     25% {
         margin-left: 0.5rem;
     }
+
     75% {
         margin-left: -0.5rem;
     }
+
     100% {
         margin-left: 0rem;
     }
