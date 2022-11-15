@@ -40,6 +40,9 @@ body {
         "nav header header"
         "nav main aside"
         "nav footer footer";
+    
+    grid-template-columns: 1fr 5fr 2fr;
+    grid-template-rows: 9rem auto 3rem;
 }
 
 main {
@@ -47,11 +50,172 @@ main {
 }
 
 nav {
+    font-weight: bold;
     grid-area: nav;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.navigation > .general,
+.navigation >  .technical {
+    margin-left: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.nav-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nav-icon,
+.search-icon,
+.notification-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: transparent;
+    background-position: center center;
+    background-size: 1.5rem 1.5rem;
+}
+
+.nav-head {
+    font-size: large;
+    margin-top: 1rem;
+}
+
+.logo-icon {
+    background-image: url("./icons/gemini.png");
+
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: transparent;
+    background-position: center center;
+    background-size: 2.5rem 2.5rem;
+}
+
+.home-icon {
+    background-image: url("./icons/nav/home.svg");
+}
+.profile-icon {
+    background-image: url("./icons/nav/profile.png");
+}
+.messages-icon {
+    background-image: url("./icons/nav/messages.png");
+}
+.history-icon {
+    background-image: url("./icons/nav/history.svg");
+}
+.tasks-icon {
+    background-image: url("./icons/nav/tasks.png");
+}
+.communities-icon {
+    background-image: url("./icons/nav/communities.png");
+}
+.settings-icon {
+    background-image: url("./icons/nav/settings.svg");
+}.support-icon {
+    background-image: url("./icons/nav/support.png");
+}
+.privacy-icon {
+    background-image: url("./icons/nav/privacy.png");
 }
 
 header {
     grid-area: header;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0rem;
+    padding: 1rem;
+}
+
+.header-search {
+    display: grid;
+    grid-template-columns: 1fr 10fr;
+    grid-template-rows: 1.5rem;
+    justify-content: center;
+    align-items: center;
+}
+.search-icon {
+    background-image: url("./icons/header/search.svg");
+}
+.searchbar {
+    border-radius: 1.5rem;
+}
+
+.header-profile {
+    display: grid;
+    grid-template-columns: 1.5rem 3rem 5rem;
+    gap: 1rem;
+    justify-content: end;
+    align-items: center;
+}
+.notification-icon {
+    background-image: url("./icons/header/notification.png");
+}
+
+.header-greeting {
+    display: flex;
+}
+.header-utils {
+    display: flex;
+}
+
+
+.profile-pfp,
+.greeting-pfp {
+    background-image: url("./images/pfp.png");
+    background-color: transparent;
+    background-position: center center;
+}
+
+.profile-pfp {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    background-size: 3rem 3rem;
+}
+
+.greeting-pfp {
+    border-radius: 50%;
+    width: 5rem;
+    height: 5rem;
+    background-size: 5rem 5rem;
+    margin-right: 0.5rem;
+}
+
+.greeting-name {
+    margin-top: 0.5rem;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.header-utils {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.btn-new,
+.btn-share,
+.btn-upload {
+    border-radius: 1.5rem;
 }
 
 aside {
@@ -76,7 +240,7 @@ input {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(var(--book-width), 1fr));
     gap: 3rem;
-    padding: 3rem;
+    padding: 2rem;
 }
 
 .background {
@@ -127,7 +291,7 @@ input {
 }
 
 .book-delete::after {
-    content: url("./icons/trash-can.svg");
+    content: url("./icons/books/trash-can.svg");
 }
 
 .poppy-button:hover {
@@ -149,11 +313,11 @@ input {
 }
 
 .book-isRead.isRead::after {
-    content: url("./icons/read.svg");
+    content: url("./icons/books/read.svg");
 }
 
 .book-isRead:not(.isRead)::after {
-    content: url("./icons/not-read.svg");
+    content: url("./icons/books/not-read.svg");
 }
 
 .book-info {
@@ -200,9 +364,11 @@ input {
 }
 
 #form-top > #close {
-    background-image: url("./icons/close.svg");
+    background-color: transparent;
+    background-image: url("./icons/books/close.svg");
     width: 2rem;
     height: 2rem;
+    background-size: 2rem 2rem;
 }
 
 #form-top > #close:hover {
@@ -219,6 +385,7 @@ input {
 /* Revisar vv */
 #new-book > button {
     height: 2rem;
+    background-size: 2rem 2rem;
 
     transition: all 0.2s linear;
 }
