@@ -5,12 +5,16 @@
     --rotation: 60;
     color: #222;
     --main-color: hsl(var(--base-hue), var(--saturation), var(--lightness));
-    --sec-color: hsl(calc(var(--base-hue) + var(--rotation)),
-            var(--saturation),
-            var(--lightness));
-    --ter-color: hsl(calc(var(--base-hue) + var(--rotation) * 2),
-            var(--saturation),
-            var(--lightness));
+    --sec-color: hsl(
+        calc(var(--base-hue) + var(--rotation)),
+        var(--saturation),
+        var(--lightness)
+    );
+    --ter-color: hsl(
+        calc(var(--base-hue) + var(--rotation) * 2),
+        var(--saturation),
+        var(--lightness)
+    );
 
     --book-width: 210px;
 }
@@ -31,6 +35,31 @@ html {
 
 body {
     min-height: 100vh;
+    display: grid;
+    grid-template-areas:
+        "nav header header"
+        "nav main aside"
+        "nav footer footer";
+}
+
+main {
+    grid-area: main;
+}
+
+nav {
+    grid-area: nav;
+}
+
+header {
+    grid-area: header;
+}
+
+aside {
+    grid-area: aside;
+}
+
+footer {
+    grid-area: footer;
 }
 
 .neumorph,
@@ -152,7 +181,7 @@ input {
     font-size: 75%;
     position: absolute;
     right: 5px;
-    bottom: 5px;
+    bottom: 2px;
 }
 
 /* Form popup */
@@ -170,13 +199,13 @@ input {
     align-items: center;
 }
 
-#form-top>#close {
+#form-top > #close {
     background-image: url("./icons/close.svg");
     width: 2rem;
     height: 2rem;
 }
 
-#form-top>#close:hover {
+#form-top > #close:hover {
     cursor: pointer;
 }
 
@@ -188,7 +217,7 @@ input {
 }
 
 /* Revisar vv */
-#new-book>button {
+#new-book > button {
     height: 2rem;
 
     transition: all 0.2s linear;
@@ -235,13 +264,13 @@ input.invalid:focus {
     outline-color: var(--secondary-color);
 }
 
-input+p {
+input + p {
     color: var(--secondary-color);
     opacity: 0;
     font-size: 0.75rem;
 }
 
-input.invalid+p {
+input.invalid + p {
     opacity: 1;
 }
 
@@ -271,7 +300,7 @@ input.invalid+p {
         grid-column: auto;
     }
 
-    #new-book>button {
+    #new-book > button {
         grid-column: auto;
     }
 }
@@ -292,7 +321,6 @@ input.invalid+p {
     100% {
         transform: scale(0%);
     }
-
 }
 
 @keyframes shake {
