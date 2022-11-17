@@ -83,8 +83,8 @@ function displayBooks(
     }
 
     if (!document.querySelector(".book.book-add")) {
-        bookCanvas.insertAdjacentHTML("beforeend", `<div class="newButtonContainer">
-            <button class="book book-add popOut-button">+</button>
+        bookCanvas.insertAdjacentHTML("beforeend", `<div class="newButtonContainer popIn">
+            <button class="book book-add popOut-button">Add a new book</button>
         </div>
         `);
     }
@@ -205,7 +205,6 @@ function addEvents() {
 function newBookBtnEvents() {
     const newBookBtn = document.querySelector(".book-add");
     newBookBtn.addEventListener("click", () => {
-        console.log("making new form");
         const bookCanvas = document.getElementById("book-list");
         addForm();
         popIn("#form-popup");
@@ -373,6 +372,7 @@ function addForm() {
                     <label for="desc">Description:</label>
                     <br />
                     <textarea
+                        class="neumorph"
                         name="desc"
                         id="desc"
                         rows="6"
@@ -407,7 +407,7 @@ function addForm() {
                     />
                 </div>
             </form>
-            <button id="submit">Add Book</button>
+            <button class="neumorph" id="submit">Add Book</button>
         </div>`;
     bookCanvas.insertAdjacentHTML("beforeend", formHTML);
 }
