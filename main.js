@@ -2,30 +2,32 @@ let id = 0;
 
 const books = [];
 
-const Book = function (
-    title,
-    author,
-    pageLen,
-    isRead,
-    coverImg,
-    description,
-    id
-) {
-    this.title = typeof (title) !== "string" ? "Untitled" : title,
-        this.author = typeof (author) !== "string" ? "Anonymous" : author,
-        this.pageLen = typeof (pageLen) !== "number" ? null : pageLen,
-        this.isRead = typeof (isRead) !== "boolean" ? false : isRead,
-        this.info = () => {
-            let readStatus = this.isRead ? "already read" : "not read yet";
+class Book {
+    constructor (
+        title,
+        author,
+        pageLen,
+        isRead,
+        coverImg,
+        description,
+        id
+    ) {
+        const title = typeof (title) !== "string" ? "Untitled" : title;
+        const author = typeof (author) !== "string" ? "Anonymous" : author;
+        const pageLen = typeof (pageLen) !== "number" ? null : pageLen;
+        let isRead = typeof (isRead) !== "boolean" ? false : isRead;
+        const info = () => {
+            let readStatus = isRead ? "already read" : "not read yet";
             return `${this.title} by ${this.author}, ${this.pageLen} pages, ${readStatus}`;
-        },
-        this.coverImg = typeof (coverImg) !== "string" ? "" : coverImg,
-        this.description =
+        };
+        const coverImg = typeof (coverImg) !== "string" ? "" : coverImg;
+        const description =
         typeof (description) !== "string"
             ? "Read to find out more!"
-            : description,
-        this.id = typeof (id) !== "number" ? newId() : id
-};
+            : description;
+        const id = typeof (id) !== "number" ? newId() : id;
+        };
+}
 
 function setup() {
     //Add sample books to library
