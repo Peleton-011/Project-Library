@@ -388,6 +388,7 @@ function addForm() {
                         name="pageLen"
                         id="page-len"
                         placeholder="296"
+                        max="10000"
                     />
                     <p>Length in pages must only contain numbers</p>
                 </div>
@@ -410,9 +411,83 @@ function addForm() {
             <button class="neumorph" id="submit">Add Book</button>
         </div>`;
     bookCanvas.insertAdjacentHTML("beforeend", formHTML);
+    document.getElementById("title").oninput = checkTitle
+    document.getElementById("author").oninput = checkAuthor
+    document.getElementById("desc").oninput = checkDesc
+    document.getElementById("page-len").oninput = checkLen
+    document.getElementById("img-url").oninput = checkURL
+
 }
 
+function checkTitle() {
+    const title = document.getElementById("title");
+    
+    if (!title.value) {
+        return;
+    }
 
+    const textyRegex = /^[\w\s-]{1,}$/gi;
+
+    //Check
+    const validity = textyRegex.test(title.value) ? "" : "The title must only contain characters from the following: Letters, numbers, hyphens, underscores and spaces."
+    title.setCustomValidity(validity)
+}
+
+function checkAuthor() {
+    const author = document.getElementById("author");
+    
+    if (!author.value) {
+        return;
+    }
+
+    const textyRegex = /^[\w\s-]{1,}$/gi;
+
+    //Check
+    const validity = textyRegex.test(author.value) ? "" : "The author must only contain characters from the following: Letters, numbers, hyphens, underscores and spaces."
+    author.setCustomValidity(validity)
+}
+
+function checkDesc() {
+    const desc = document.getElementById("desc");
+    
+    if (!desc.value) {
+        return;
+    }
+    
+    const textyRegex = /^[\w\s-]{1,}$/gi;
+
+    //Check
+    const validity = textyRegex.test(desc.value) ? "" : "The description must only contain characters from the following: Letters, numbers, hyphens, underscores and spaces."
+    desc.setCustomValidity(validity)
+}
+
+function checkLen() {
+    const length = document.getElementById("page-len");
+    
+    if (!length.value) {
+        return;
+    }
+    
+    const numRegex = /^\d*$/g;
+
+    //Check
+    const validity = numRegex.test(length.value) ? "" : "The length must contain only numbers."
+    length.setCustomValidity(validity)
+}
+
+function checkURL() {
+    const url = document.getElementById("img-url");
+    
+    if (!url.value) {
+        return;
+    }
+
+    const urlRegex = /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
+
+    //Check
+    const validity = urlRegex.test(url.value) ? "" : "This URL is invalid. Try using a different URL.";
+    url.setCustomValidity(validity)
+}
 
 
 //Plays an animation designed to indicate being pressed

@@ -450,25 +450,25 @@ label[for="is-read"] {
 
 /* Revisar vv */
 
-input.valid {
+input:valid {
     color: var(--white);
 }
 
-input.invalid {
-    color: var(--secondary-color);
+input:invalid {
+    color: var(--sec-color);
 }
 
 input.invalid:not(:focus) {
     animation: shake 0.25s ease-in-out 0s 2;
-    box-shadow: 0 0 4px var(--secondary-color);
+    box-shadow: 0 0 4px var(--sec-color);
 }
 
 input.invalid:focus {
-    outline-color: var(--secondary-color);
+    outline-color: var(--sec-color);
 }
 
 input + p {
-    color: var(--secondary-color);
+    color: var(--sec-color);
     opacity: 0;
     font-size: 0.75rem;
 }
