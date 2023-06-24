@@ -400,7 +400,7 @@ function addForm() {
                 <div class="input-group">
                     <label for="img-url">Cover image URL:</label>
                     <input
-                        type="text"
+                        type="url"
                         name="imgUrl"
                         id="img-url"
                         placeholder="https://www.images.net/myImages/02"
@@ -411,6 +411,9 @@ function addForm() {
         </div>`;
     bookCanvas.insertAdjacentHTML("beforeend", formHTML);
 }
+
+
+
 
 //Plays an animation designed to indicate being pressed
 
