@@ -349,9 +349,7 @@ function addForm() {
                     <label for="title">Title:</label>
                     <input type="text" name="title" id="title" required
                     maxlength=40" placeholder="The Banquet" />
-                    <p>
-                        Title must be shorter than 40 characters
-                    </p>
+                    <span class="error" aria-live="polite"></span>
                 </div>
 
                 <div class="input-group">
@@ -363,9 +361,7 @@ function addForm() {
                         maxlength="40"
                         placeholder="Plato"
                     />
-                    <p>
-                        Author must be shorter than 40 characters
-                    </p>
+                    <span class="error" aria-live="polite"></span>
                 </div>
 
                 <div class="input-group">
@@ -379,6 +375,7 @@ function addForm() {
                         maxlength="100"
                         placeholder="Add a short description in 100 characters o less"
                     ></textarea>
+                    <span class="error" aria-live="polite"></span>
                 </div>
 
                 <div class="input-group">
@@ -390,7 +387,7 @@ function addForm() {
                         placeholder="296"
                         max="10000"
                     />
-                    <p>Length in pages must only contain numbers</p>
+                    <span class="error" aria-live="polite"></span>
                 </div>
 
                 <div class="input-group checkbox">
@@ -406,16 +403,22 @@ function addForm() {
                         id="img-url"
                         placeholder="https://www.images.net/myImages/02"
                     />
+                    <span class="error" aria-live="polite"></span>
                 </div>
             </form>
             <button class="neumorph" id="submit">Add Book</button>
         </div>`;
     bookCanvas.insertAdjacentHTML("beforeend", formHTML);
-    document.getElementById("title").oninput = checkTitle
-    document.getElementById("author").oninput = checkAuthor
-    document.getElementById("desc").oninput = checkDesc
-    document.getElementById("page-len").oninput = checkLen
-    document.getElementById("img-url").oninput = checkURL
+    const title = document.getElementById("title")
+    const author = document.getElementById("author")
+    const desc = document.getElementById("desc")
+    const len = document.getElementById("page-len")
+    const url = document.getElementById("img-url")
+    title.oninput = checkTitle
+    author.oninput = checkAuthor
+    desc.oninput = checkDesc
+    len.oninput = checkLen
+    url.oninput = checkURL
 
 }
 
