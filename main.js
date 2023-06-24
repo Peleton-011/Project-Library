@@ -350,8 +350,7 @@ function addForm() {
                     <input type="text" name="title" id="title" required
                     maxlength=40" placeholder="The Banquet" />
                     <p>
-                        Title must not contain special characters and be
-                        shorter than 40
+                        Title must be shorter than 40 characters
                     </p>
                 </div>
 
@@ -361,12 +360,11 @@ function addForm() {
                         type="text"
                         name="author"
                         id="author"
-                        maxlength="20"
+                        maxlength="40"
                         placeholder="Plato"
                     />
                     <p>
-                        Author must not contain special characters and be
-                        shorter than 40
+                        Author must be shorter than 40 characters
                     </p>
                 </div>
 
@@ -405,7 +403,7 @@ function addForm() {
                         type="text"
                         name="imgUrl"
                         id="img-url"
-                        placeholder="www.images.net/myImages/02"
+                        placeholder="https://www.images.net/myImages/02"
                     />
                 </div>
             </form>

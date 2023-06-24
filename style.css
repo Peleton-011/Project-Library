@@ -227,6 +227,10 @@ footer {
     grid-area: footer;
 }
 
+#form-popup {
+    transform: translate(-50%, -50%);
+}
+
 .neumorph,
 #form-popup,
 input {
@@ -419,7 +423,7 @@ input {
     height: 2rem;
     background-size: 2rem 2rem;
 
-    transition: all 0.2s linear;
+    transition: transform 0.2s ease-in-out;
 }
 
 input {
