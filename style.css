@@ -454,27 +454,17 @@ input:valid {
     color: var(--white);
 }
 
-input:invalid {
-    color: var(--sec-color);
+input.invalid {
+    color: #900;
 }
 
 input.invalid:not(:focus) {
     animation: shake 0.25s ease-in-out 0s 2;
-    box-shadow: 0 0 4px var(--sec-color);
+    box-shadow: 0 0 4px #900;
 }
 
 input.invalid:focus {
     outline-color: var(--sec-color);
-}
-
-input + p {
-    color: var(--sec-color);
-    opacity: 0;
-    font-size: 0.75rem;
-}
-
-input.invalid + p {
-    opacity: 1;
 }
 
 .input-group {
@@ -543,3 +533,30 @@ input.invalid + p {
         margin-left: 0rem;
     }
 }
+
+
+input.invalid {
+    border-color: #900;
+    background-color: rgba(250, 180, 180, 0.6);
+  }
+  
+  input:focus.invalid {
+    outline: none;
+  }
+  
+  /* This is the style of our error messages */
+  .error {
+    width: 100%;
+    padding: 0;
+  
+    font-size: 80%;
+    color: white;
+    background-color: #900;
+    border-radius: 0 0 5px 5px;
+  
+    box-sizing: border-box;
+  }
+  
+  .error.active {
+    padding: 0.3em;
+  }
